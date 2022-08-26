@@ -1,8 +1,15 @@
-#include "headers.h"
-#include "print_error.h"
+#include "../headers.h"
+#include "../out_module/print_error.h"
 
 void find_new_path(char *path)
 {
+    if(strcmp(path,"/") == 0){
+        return;
+    }
+    if(strcmp(path,"/home") == 0){
+        sprintf(path,"/");
+        return;
+    }
     int len = strlen(path);
     len--;
     while (path[len] != '/')
@@ -23,7 +30,7 @@ int is_directory(const char *fileName)
     return S_ISDIR(path.st_mode);
 }
 
-int change_directory(char *absolute_path, char *relative_path, char *input, char *home_path, size_t MAXIMUM_DIRECTORY_LENGTH)
+/* int change_directory(char *absolute_path, char *relative_path, char *input, char *home_path, size_t MAXIMUM_DIRECTORY_LENGTH)
 {
     // printf("%s\n", input);
     if (input[0] == '~'&&input[1]== '\0')
@@ -104,5 +111,71 @@ int change_directory(char *absolute_path, char *relative_path, char *input, char
             strcpy(relative_path, new_relative_dir);
         }
         return 1;
+    }
+}*/
+
+
+
+int change_directory(char *absolute_path, char *relative_path, char *input, char *home_path, size_t MAXIMUM_DIRECTORY_LENGTH){
+    if(input[0] == '/'){
+        int ret_val = is_directory(input);
+        if (ret_val == -1)
+        {
+            print_error("No such file or directory");
+            return 0;
+        }
+        else if (ret_val == 0)
+        {
+            char error[50];
+            sprintf(error,"%s is not a directory",input);
+            print_error(error);
+            return 0;
+        }else{
+            strcpy(absolute_path,input);
+            if(strncmp(input,home_path,strlen(home_path)) == 0){
+                sprintf(relative_path,"~%s",&input[strlen(home_path)]);
+            }else{
+                strcpy(relative_path,absolute_path);
+            }
+        }
+    }else{
+        char* next_dest = strtok(input,"/");
+        char Final_new_Path[MAXIMUM_DIRECTORY_LENGTH];
+        strcpy(Final_new_Path,absolute_path);
+        while(next_dest != NULL){
+            if(strcmp(next_dest,"~") == 0){
+                sprintf(Final_new_Path,"%s",home_path);
+            }else if(strcmp(next_dest,"..") == 0){
+                find_new_path(Final_new_Path);
+            }else if(strcmp(next_dest,".") == 0){
+                // do nothing
+            }else{
+                strcat(Final_new_Path,"/");
+                strcat(Final_new_Path,next_dest);
+                int exists = is_directory(Final_new_Path);
+                if (exists == -1)
+                {
+                    print_error("No such file or directory");
+                    return 0;
+                }
+                else if (exists == 0)
+                {
+                    char error[50];
+                    sprintf(error, "%s is not a directory", input);
+                    print_error(error);
+                    return 0;
+                }
+            }
+            next_dest = strtok(NULL,"/");
+        }
+        strcpy(absolute_path, Final_new_Path);
+        if (strncmp(Final_new_Path, home_path, strlen(home_path)) == 0)
+        {
+            sprintf(relative_path, "~%s", &Final_new_Path[strlen(home_path)]);
+        }
+        else
+        {
+            strcpy(relative_path, absolute_path);
+        }
     }
 }

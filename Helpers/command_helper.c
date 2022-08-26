@@ -1,6 +1,6 @@
-#include "headers.h"
-#include "cd.h"
-#include "print_error.h"
+#include "../headers.h"
+#include "../commands/cd.h"
+#include "../out_module/print_error.h"
 
 // void remove_unnecessary(char *s, char *helper_string)
 // {
@@ -59,8 +59,8 @@ void shell_helper(char *input, size_t MAXIMUM_DIRECTORY_LENGTH,
                   char *home_directory, char *error_holder,
                   char *relative_dir, char *absolute_dir)
 {
-    char input_temp[MAXIMUM_INPUT_SIZE];
-    remove_unnecessary(input,input_temp);
+    // char input_temp[MAXIMUM_INPUT_SIZE];
+    // remove_unnecessary(input,input_temp);
     char* token;
     token = strtok(input,";");
     while(token!=NULL){

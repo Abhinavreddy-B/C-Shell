@@ -1,7 +1,7 @@
-#include "prompt.h"
+#include "out_module/prompt.h"
 #include "headers.h"
-#include "command_helper.h"
-#include "getinfo.h"
+#include "Helpers/command_helper.h"
+#include "Helpers/getinfo.h"
 
 int main()
 {

@@ -1,5 +1,5 @@
 #ifndef _SHELL_HELPER_H_
-#include "headers.h"
+#include "../headers.h"
 #define _SHELL_HELPER_H_
 
 void shell_helper(char *input, size_t MAXIMUM_DIRECTORY_LENGTH,

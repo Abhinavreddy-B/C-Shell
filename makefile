@@ -3,20 +3,20 @@ flags = -pedantic -Wall -g
 main: main.c getinfo.o prompt.o cd.o print_error.o command_helper.o
 	gcc $(flags) main.c *.o -o main 
 
-getinfo.o: getinfo.c print_error.o
-	gcc $(flags) -c getinfo.c
+getinfo.o: ./Helpers/getinfo.c
+	gcc $(flags) -c ./Helpers/getinfo.c
 
-prompt.o: prompt.c
-	gcc $(flags) -c prompt.c
+prompt.o: ./out_module/prompt.c
+	gcc $(flags) -c ./out_module/prompt.c
 
-cd.o: cd.c print_error.o
-	gcc $(flags) -c cd.c
+cd.o: ./commands/cd.c
+	gcc $(flags) -c ./commands/cd.c
 
-print_error.o: print_error.c
-	gcc $(flags) -c print_error.c
+print_error.o: ./out_module/print_error.c
+	gcc $(flags) -c ./out_module/print_error.c
 
-command_helper.o: cd.o print_error.o command_helper.c
-	gcc $(flags) -c command_helper.c
+command_helper.o: ./Helpers/command_helper.c
+	gcc $(flags) -c ./Helpers/command_helper.c
 
 clean:
 	rm *.o
