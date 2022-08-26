@@ -22,7 +22,9 @@ int main()
     relative_dir[0] = '~';
     relative_dir[1] = '\0';
     char absolute_dir[MAXIMUM_DIRECTORY_LENGTH];
+    char prev_directory[MAXIMUM_DIRECTORY_LENGTH];
     strcpy(absolute_dir, home_directory);
+    strcpy(prev_directory, home_directory);
     while (1)
     {
         prompt(username, system_name, relative_dir);
@@ -34,7 +36,7 @@ int main()
                   MAXIMUM_INPUT_SIZE, MAXIMUM_ERROR_LENGTH,
                   MAXIMUM_SYSTEM_NAME,username,
                   home_directory, error_holder,
-                  relative_dir, absolute_dir);
+                  relative_dir, absolute_dir,prev_directory);
         }
         // printf("%.2s\n", &a[start]);
         // if (strncmp(&a[start], "cd ", 3) == 0)

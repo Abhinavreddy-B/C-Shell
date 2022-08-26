@@ -1,5 +1,7 @@
 #include "../headers.h"
 #include "../commands/cd.h"
+#include "../commands/pwd.h"
+#include "../commands/echo.h"
 #include "../out_module/print_error.h"
 
 // void remove_unnecessary(char *s, char *helper_string)
@@ -28,7 +30,7 @@ void splitter(char *command, size_t MAXIMUM_DIRECTORY_LENGTH,
               size_t MAXIMUM_INPUT_SIZE, const size_t MAXIMUM_ERROR_LENGTH,
               const size_t MAXIMUM_SYSTEM_NAME, char *username,
               char *home_directory, char *error_holder,
-              char *relative_dir, char *absolute_dir)
+              char *relative_dir, char *absolute_dir, char* old_directory)
 {
     size_t MAX_NO_OF_PARTS = 101LL;
     // printf("%s\n",command);
@@ -44,12 +46,18 @@ void splitter(char *command, size_t MAXIMUM_DIRECTORY_LENGTH,
         return;
     }
     if(strcmp(command_split[0],"cd") == 0){
-        if(cnt != 2){
+        if(cnt == 1){
+            change_directory(absolute_dir,relative_dir,"~",home_directory, old_directory ,MAXIMUM_DIRECTORY_LENGTH);
+        }else if(cnt != 2){
             print_error("Invalid No Of arguments");
             return;
         }else{
-            int ret_val = change_directory(absolute_dir,relative_dir,command_split[1],home_directory,MAXIMUM_DIRECTORY_LENGTH);
+            change_directory(absolute_dir,relative_dir,command_split[1],home_directory, old_directory ,MAXIMUM_DIRECTORY_LENGTH);
         }
+    }else if(strcmp(command_split[0],"pwd") == 0){
+        present_working_directory(absolute_dir);
+    }else if(strcmp(command_split[0],"echo")==0){
+        echo(command_split,cnt);
     }
 }
 
@@ -57,7 +65,7 @@ void shell_helper(char *input, size_t MAXIMUM_DIRECTORY_LENGTH,
                   size_t MAXIMUM_INPUT_SIZE, const size_t MAXIMUM_ERROR_LENGTH,
                   const size_t MAXIMUM_SYSTEM_NAME, char *username,
                   char *home_directory, char *error_holder,
-                  char *relative_dir, char *absolute_dir)
+                  char *relative_dir, char *absolute_dir, char* old_directory)
 {
     // char input_temp[MAXIMUM_INPUT_SIZE];
     // remove_unnecessary(input,input_temp);
@@ -72,11 +80,11 @@ void shell_helper(char *input, size_t MAXIMUM_DIRECTORY_LENGTH,
         token = split_input[tokencnt] = strtok(NULL,";");
     }
     for(int i=0;i<tokencnt;i++){
-        printf ("%s\n",split_input[i]);
+        // printf ("%s\n",split_input[i]);
         splitter(split_input[i], MAXIMUM_DIRECTORY_LENGTH,
                   MAXIMUM_INPUT_SIZE, MAXIMUM_ERROR_LENGTH,
                   MAXIMUM_SYSTEM_NAME,username,
                   home_directory, error_holder,
-                  relative_dir, absolute_dir);
+                  relative_dir, absolute_dir,old_directory);
     }
 }
