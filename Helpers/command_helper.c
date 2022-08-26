@@ -31,7 +31,7 @@ void splitter(char *command, size_t MAXIMUM_DIRECTORY_LENGTH,
               char *relative_dir, char *absolute_dir)
 {
     size_t MAX_NO_OF_PARTS = 101LL;
-    printf("%s\n",command);
+    // printf("%s\n",command);
     char* command_split[MAX_NO_OF_PARTS];
     char* part;
     int cnt=0;
@@ -61,15 +61,22 @@ void shell_helper(char *input, size_t MAXIMUM_DIRECTORY_LENGTH,
 {
     // char input_temp[MAXIMUM_INPUT_SIZE];
     // remove_unnecessary(input,input_temp);
+    size_t MAXIMUM_NO_OF_TOKENS = 101LL ;
+    char* split_input[MAXIMUM_NO_OF_TOKENS];
+    // printf("%s\n",input);
     char* token;
-    token = strtok(input,";");
-    while(token!=NULL){
-        // printf ("%s\n",token);
-        splitter(token, MAXIMUM_DIRECTORY_LENGTH,
+    int tokencnt=0;
+    token = split_input[tokencnt] =strtok(input,";");
+    while(token != NULL){
+        tokencnt++;
+        token = split_input[tokencnt] = strtok(NULL,";");
+    }
+    for(int i=0;i<tokencnt;i++){
+        printf ("%s\n",split_input[i]);
+        splitter(split_input[i], MAXIMUM_DIRECTORY_LENGTH,
                   MAXIMUM_INPUT_SIZE, MAXIMUM_ERROR_LENGTH,
                   MAXIMUM_SYSTEM_NAME,username,
                   home_directory, error_holder,
                   relative_dir, absolute_dir);
-        token = strtok(NULL,";");
     }
 }
