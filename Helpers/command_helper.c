@@ -2,6 +2,7 @@
 #include "../commands/cd.h"
 #include "../commands/pwd.h"
 #include "../commands/echo.h"
+#include "../commands/ls.h"
 #include "../out_module/print_error.h"
 
 // void remove_unnecessary(char *s, char *helper_string)
@@ -33,6 +34,7 @@ void splitter(char *command, size_t MAXIMUM_DIRECTORY_LENGTH,
               char *relative_dir, char *absolute_dir, char* old_directory)
 {
     size_t MAX_NO_OF_PARTS = 101LL;
+    size_t MAXIMUM_NO_OF_INNER_FILES = 101LL;
     // printf("%s\n",command);
     char* command_split[MAX_NO_OF_PARTS];
     char* part;
@@ -58,6 +60,8 @@ void splitter(char *command, size_t MAXIMUM_DIRECTORY_LENGTH,
         present_working_directory(absolute_dir);
     }else if(strcmp(command_split[0],"echo")==0){
         echo(command_split,cnt);
+    }else if(strcmp(command_split[0],"ls") == 0){
+        ls(command_split,cnt,MAXIMUM_NO_OF_INNER_FILES);
     }
 }
 
