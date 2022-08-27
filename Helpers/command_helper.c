@@ -5,28 +5,6 @@
 #include "../commands/ls.h"
 #include "../out_module/print_error.h"
 
-// void remove_unnecessary(char *s, char *helper_string)
-// {
-//     int start = 0;
-//     while (s[start] == ' ' || s[start] == '\t')
-//         start++;
-//     strcpy(helper_string, s + start);
-//     int pos = 0;
-//     for (int i = 0; helper_string[i] != '\0'; i++)
-//     {
-//         if (helper_string[i] == '\t')
-//             helper_string[i] = ' ';
-//         if (i == 0 || helper_string[i] != ' ' || (helper_string[i] == ' ' && helper_string[i - 1] != ' '))
-//         {
-//             s[pos] = helper_string[i];
-//             pos++;
-//         }
-//     }
-//     s[pos] = '\0';
-//     printf("%s\n",s);
-// }
-
-
 void splitter(char *command, size_t MAXIMUM_DIRECTORY_LENGTH,
               size_t MAXIMUM_INPUT_SIZE, const size_t MAXIMUM_ERROR_LENGTH,
               const size_t MAXIMUM_SYSTEM_NAME, char *username,

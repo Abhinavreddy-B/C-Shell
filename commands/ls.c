@@ -7,21 +7,17 @@ char depiction[3] = {'r','w','x'};
 int cmp(const void* a,const void* b){
     char * n1 = (char *) (*((struct dirent **) a))->d_name;
     char * n2 = (char *) (*((struct dirent **) b))->d_name;
-    // printf("%s %s\n", (char *) n1, (char *)  n2);
     return strcmp(n1,n2);
 }
 
 void sort(struct dirent* arr[],int cnt){
-    // for(int i=0;i<cnt;i++){
-        // printf("%s\n",arr[i]->d_name);
-    // }
     qsort(arr,cnt,sizeof(struct dirent*),cmp);
 }
 
-void print_Format_permissions(ino_t perms,unsigned char  d_type){
+void print_Format_permissions(ino_t perms,int is_directory){
     char str[11];
     str[10]='\0';
-    if(d_type == DT_DIR){
+    if(is_directory){
         str[0] = 'd';
     }else{
         str[0]='-';
@@ -36,37 +32,54 @@ void print_Format_permissions(ino_t perms,unsigned char  d_type){
     printf("%10s ",str);
 }
 
-// void print_name(char* name,int is_directory){
-    // if(is_directory){
-        // printf("%s",name);
-    // }else{
-        // 
-    // }
-// }
+void print_name(char* name,int mode){
+    // normal file
+    if(mode == 0){
+        printf("%s",name);
+    }else if(mode==1){
+        // directory
+        printf("\033[34m\033[1m%s\033[0m",name);
+    }else if(mode == 2){
+        //executables
+        printf("\033[32m\033[1m%s\033[0m",name);
+    }
+}
 
-void print_detail(struct dirent *file){
-    print_Format_permissions(file->d_ino,file->d_type);
-    struct stat file_props;
-    stat(file->d_name,&file_props);
-    // perror("Hello");
+void print_detail(char* name,struct stat file_props){
+    print_Format_permissions(file_props.st_ino,S_ISDIR(file_props.st_mode));
     printf("%4ld ",file_props.st_nlink);
-
     printf("%-15.15s ", getpwuid(file_props.st_uid)->pw_name);
     printf("%-15.15s ", getgrgid(file_props.st_gid)->gr_name);
     printf("%6ld ",file_props.st_size);
-    // printf("%s ",file_props->st_mtim.tv_sec);
-    printf("%s\n",file->d_name);
+    
+    char buff[35];
+    struct tm * timeinfo;
+    timeinfo = localtime (&(file_props.st_mtim.tv_sec));
+    strftime(buff, sizeof(buff), "%b %d %H:%M", timeinfo);
+    printf("%s ",buff);
+    
+    if( S_ISDIR( file_props.st_mode ) != 0){
+        print_name(name,1);
+    }else if( file_props.st_mode & S_IXUSR){
+        print_name(name,2);
+    }else{
+        print_name(name,0);
+    }
+    printf("\n");
 }
 
 // mode = 0 means brief , mode = 1 means detail
-int print_ls_normal(char *path,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidden, int mode )
+// many is 1 when there are more than 1 paths to be printed, else many is 0
+int print_ls_normal(char *path,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidden, int mode,int many )
 {
-    // printf("%s\n",path);
     DIR *directory;
     struct dirent *prop;
     directory = opendir(path);
     if (directory != 0)
     {
+        if(many){
+        printf("\n\033[41:32m%s\033[0m\n---------------------------------\n",path);
+        }
         struct dirent *files[MAXIMUM_NO_OF_INNER_PARTS];
         int cnt = 0;
         while ((files[cnt] = prop = readdir(directory)) != NULL)
@@ -89,15 +102,39 @@ int print_ls_normal(char *path,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidden, int
             {
                 if (hidden == 1 || files[i]->d_name[0] != '.')
                 {
-                    print_detail(files[i]);
+                    struct stat file_props;
+                    char temp[10000];
+                    sprintf(temp,"%s/%s",path,files[i]->d_name);
+                    stat(temp,&file_props);
+                    print_detail(files[i]->d_name,file_props);
                 }
             }
         }
         closedir(directory);
+    }else if(errno == ENOTDIR){
+        if(many){
+            printf("\n---------------------------------\n");
+        }
+        // struct dirent *file = readdir(directory);
+        char name[100000];
+        int start=strlen(path)-1;
+        while(path[start]!='/'&&start>=0) start--;
+        strcpy(name,&path[start+1]);
+        // printf("Hello\n");
+        if (mode == 0)
+        {
+            printf("%s\n", name);
+            // printf("\n");
+        }else{
+            struct stat file_props;
+            stat(path,&file_props);
+            print_detail(name,file_props);
+        }
+
     }
     else
     {
-        print_error("Could not open the directory");
+        print_error("Could not look-up for the file/directory");
         perror("\033[0;31mError ");
         return 1;
     }
@@ -105,25 +142,6 @@ int print_ls_normal(char *path,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidden, int
 }
 
 int ls(char* command[],int cnt,size_t MAXIMUM_NO_OF_INNER_PARTS){
-    // if(cnt == 1){
-        // print_ls_normal(".",MAXIMUM_NO_OF_INNER_PARTS,0,0);
-    // }else if(cnt == 2){
-        // if(command[1][0] == '-'){
-            // if(strcmp(command[1],"-a") == 0){
-                // print_ls_normal(".",MAXIMUM_NO_OF_INNER_PARTS,1,0);
-            // }else if(strcmp(command[1],"-al") == 0 || strcmp(command[1],"-la") == 0){
-                // print_ls_normal(".",MAXIMUM_NO_OF_INNER_PARTS,1,1);
-            // }else if(strcmp(command[1],"-l") == 0){
-                // print_ls_normal(".",MAXIMUM_NO_OF_INNER_PARTS,0,1);
-            // }else{
-                // print_error("Use of Unknown Flag");
-            // }
-        // }else{
-            // print_ls_normal(command[1],MAXIMUM_NO_OF_INNER_PARTS,0,0);
-        // }
-    // }else if(cnt == 3){
-        // 
-    // }
     int hidden = 0;
     int mode = 0;
     char* total_list[MAXIMUM_NO_OF_INNER_PARTS];
@@ -136,7 +154,7 @@ int ls(char* command[],int cnt,size_t MAXIMUM_NO_OF_INNER_PARTS){
         }else if(strcmp(command[i],"-la") == 0 || strcmp(command[i],"-al") == 0){
             hidden = 1;
             mode = 1;
-            break;
+            // break;
         }else if(command[i][0] == '-'){
             print_error("Invalid flags");
             return 1;
@@ -146,10 +164,11 @@ int ls(char* command[],int cnt,size_t MAXIMUM_NO_OF_INNER_PARTS){
         }
     }
     if(total_paths == 0){
-        print_ls_normal(".",MAXIMUM_NO_OF_INNER_PARTS,hidden,mode);
+        print_ls_normal(".",MAXIMUM_NO_OF_INNER_PARTS,hidden,mode,0);
+        return 0;
     }
     for(int i=0;i<total_paths;i++){
-        print_ls_normal(total_list[i],MAXIMUM_NO_OF_INNER_PARTS,hidden,mode);
+        print_ls_normal(total_list[i],MAXIMUM_NO_OF_INNER_PARTS,hidden,mode,(total_paths != 1));
     }
     return 0;
 }
