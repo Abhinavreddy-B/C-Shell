@@ -11,3 +11,4 @@
 #include <grp.h>
 #include <time.h>
 #include <errno.h>
+#include <sys/wait.h>

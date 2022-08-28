@@ -1,9 +1,6 @@
 #include "../headers.h"
 #include "../out_module/print_error.h"
 
-int masks[3][3] = {{S_IRUSR,S_IWUSR,S_IXUSR},{S_IRGRP,S_IWGRP,S_IXGRP},{S_IROTH,S_IWOTH,S_IXOTH}};
-char depiction[3] = {'r','w','x'};
-
 int cmp(const void* a,const void* b){
     char * n1 = (char *) (*((struct dirent **) a))->d_name;
     char * n2 = (char *) (*((struct dirent **) b))->d_name;
@@ -13,6 +10,9 @@ int cmp(const void* a,const void* b){
 void sort(struct dirent* arr[],int cnt){
     qsort(arr,cnt,sizeof(struct dirent*),cmp);
 }
+
+int masks[3][3] = {{S_IRUSR,S_IWUSR,S_IXUSR},{S_IRGRP,S_IWGRP,S_IXGRP},{S_IROTH,S_IWOTH,S_IXOTH}};
+char depiction[3] = {'r','w','x'};
 
 void print_Format_permissions(ino_t perms,int is_directory){
     char str[11];
@@ -32,6 +32,9 @@ void print_Format_permissions(ino_t perms,int is_directory){
     printf("%10s ",str);
 }
 
+/**
+ * @param mode 0 =>normal file , 1 => directory, 2 => executables
+*/
 void print_name(char* name,int mode){
     // normal file
     if(mode == 0){
@@ -70,7 +73,7 @@ void print_detail(char* name,struct stat file_props){
 
 // mode = 0 means brief , mode = 1 means detail
 // many is 1 when there are more than 1 paths to be printed, else many is 0
-int print_ls_normal(char *path,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidden, int mode,int many )
+int print_ls_helper(char *path,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidden, int mode,int many )
 {
     DIR *directory;
     struct dirent *prop;
@@ -78,30 +81,36 @@ int print_ls_normal(char *path,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidden, int
     if (directory != 0)
     {
         if(many){
-        printf("\n\033[41:32m%s\033[0m\n---------------------------------\n",path);
+            printf("\n\033[41:32m%s\033[0m\n---------------------------------\n",path);
         }
         struct dirent *files[MAXIMUM_NO_OF_INNER_PARTS];
         int cnt = 0;
-        while ((files[cnt] = prop = readdir(directory)) != NULL)
-        {
+        while ((files[cnt] = prop = readdir(directory)) != NULL){
             cnt++;
         }
         sort(files, cnt);
-        if (mode == 0)
-        {
-            for (int i = 0; i < cnt; i++)
-            {
-                if (hidden == 1 || files[i]->d_name[0] != '.')
-                {
-                    printf("%s\t", files[i]->d_name);
+        if (mode == 0){
+            for (int i = 0; i < cnt; i++){
+                if (hidden == 1 || files[i]->d_name[0] != '.'){
+                    struct stat file_props;
+                    char temp[10000];
+                    sprintf(temp,"%s/%s",path,files[i]->d_name);
+                    stat(temp,&file_props);
+                    if(S_ISDIR(file_props.st_mode) != 0){
+                        print_name(files[i]->d_name, 1);
+                    }else if (file_props.st_mode & S_IXUSR){
+                        print_name(files[i]->d_name, 2);
+                    }else{
+                        print_name(files[i]->d_name, 0);
+                    }
+                    printf("\n");
+                    // printf("%s\t", files[i]->d_name);
                 }
             }
-            printf("\n");
+            // printf("\n");
         }else{
-            for (int i = 0; i < cnt; i++)
-            {
-                if (hidden == 1 || files[i]->d_name[0] != '.')
-                {
+            for (int i = 0; i < cnt; i++){
+                if (hidden == 1 || files[i]->d_name[0] != '.'){
                     struct stat file_props;
                     char temp[10000];
                     sprintf(temp,"%s/%s",path,files[i]->d_name);
@@ -121,19 +130,20 @@ int print_ls_normal(char *path,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidden, int
         while(path[start]!='/'&&start>=0) start--;
         strcpy(name,&path[start+1]);
         // printf("Hello\n");
-        if (mode == 0)
-        {
+        struct stat file_props;
+        stat(path,&file_props);
+        if (mode == 0){
             printf("%s\n", name);
+            if( file_props.st_mode & S_IRUSR ){
+                print_name(name, 2);
+            }else{
+                print_name(name,0);
+            }
             // printf("\n");
-        }else{
-            struct stat file_props;
-            stat(path,&file_props);
+        }else{ 
             print_detail(name,file_props);
         }
-
-    }
-    else
-    {
+    }else{
         print_error("Could not look-up for the file/directory");
         perror("\033[0;31mError ");
         return 1;
@@ -154,7 +164,6 @@ int ls(char* command[],int cnt,size_t MAXIMUM_NO_OF_INNER_PARTS){
         }else if(strcmp(command[i],"-la") == 0 || strcmp(command[i],"-al") == 0){
             hidden = 1;
             mode = 1;
-            // break;
         }else if(command[i][0] == '-'){
             print_error("Invalid flags");
             return 1;
@@ -164,11 +173,11 @@ int ls(char* command[],int cnt,size_t MAXIMUM_NO_OF_INNER_PARTS){
         }
     }
     if(total_paths == 0){
-        print_ls_normal(".",MAXIMUM_NO_OF_INNER_PARTS,hidden,mode,0);
+        print_ls_helper(".",MAXIMUM_NO_OF_INNER_PARTS,hidden,mode,0);
         return 0;
     }
     for(int i=0;i<total_paths;i++){
-        print_ls_normal(total_list[i],MAXIMUM_NO_OF_INNER_PARTS,hidden,mode,(total_paths != 1));
+        print_ls_helper(total_list[i],MAXIMUM_NO_OF_INNER_PARTS,hidden,mode,(total_paths != 1));
     }
     return 0;
 }
