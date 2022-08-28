@@ -37,4 +37,4 @@ node.o: ./Linked_list/node.h ./Linked_list/node.c
 	gcc $(flags) -c ./Linked_list/node.c
 
 clean:
-	rm *.o main
+	rm *.o

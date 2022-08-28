@@ -17,6 +17,8 @@ char system_name[101LL];
 char error_holder[101LL];
 char time_taken[101LL];
 char relative_dir[101LL];
+char absolute_dir[101LL];
+char prev_directory[101LL];
 my_dll background_process_list;
 
 int main()
@@ -29,10 +31,8 @@ int main()
     background_process_list = CreateList();
     relative_dir[0] = '~';
     relative_dir[1] = '\0';
-    char absolute_dir[MAXIMUM_DIRECTORY_LENGTH];
-    char prev_directory[MAXIMUM_DIRECTORY_LENGTH];
     strcpy(absolute_dir, home_directory);
-    strcpy(prev_directory, home_directory);
+    prev_directory[0] = '\0';
     char input[MAXIMUM_INPUT_SIZE];
     while (1)
     {
