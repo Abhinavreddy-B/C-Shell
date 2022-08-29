@@ -1,5 +1,8 @@
 #include "../headers.h"
+#include "./pwd.h"
 
-void present_working_directory(char* absolute_path){
-    printf("%s\n",absolute_path);
+extern char *absolute_dir;
+
+void present_working_directory(){
+    printf("%s\n",absolute_dir);
 }

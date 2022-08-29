@@ -3,19 +3,22 @@
 #include "../out_module/prompt.h"
 #include "../Linked_list/my_dll.h"
 #include "../Linked_list/node.h"
+#include "./process_creation.h"
 
 extern char *username;
 extern char *home_directory;
-extern char system_name[];
-extern char time_taken[];
-extern char relative_dir[];
+extern char *system_name;
+extern char *time_taken;
+extern char *relative_dir;
 extern my_dll background_process_list;
 extern int MAXIMUM_BACKGROUND_PROCESS_NAME;
+extern time_t process_start_time;
 
 void add_process_to_list(char* name,pid_t pid){
     ListElement_ptr new_process = (ListElement_ptr) malloc(sizeof(ListElement));
     new_process->name = (char *) malloc(MAXIMUM_BACKGROUND_PROCESS_NAME * sizeof(char));
     strcpy(new_process->name,name);
+    printf("%p\n", (void *)  new_process);
     // printf("%s\n",new_process->name);
     new_process->pid = pid;
     insert(&background_process_list , new_process);
@@ -29,8 +32,10 @@ void upon_child_exit(){
     }else{
         printf("\n");
         ListElement_ptr found = Find_and_return(&background_process_list,child_pid);
+        printf("%p\n",(void *) found);
         if(found == NULL){
-            printf("Some problem\n");
+            printf("Some problem\nabnormal interrupt\n");
+            return;
         }else{
             printf("%s with pid = %d exited ", found->name ,found->pid);
             delete( &background_process_list , Find(&background_process_list,child_pid));
@@ -41,6 +46,7 @@ void upon_child_exit(){
             // printf("\033[32;1mPress Enter to Continue...\033[0m");
         }else if(WIFSIGNALED(status)){
             printf("Exited Abnomally");
+            fflush(stdin);
             psignal(WTERMSIG(status),"Cause");
             // printf("\033[32;1mPress Enter to Continue...\033[0m");
         }
@@ -54,7 +60,7 @@ void upon_child_exit(){
 /**
  * @param mode is 0 => foreground , 1 => background
  */
-int other_commands(char* command_split[],int cnt, int mode,char *time_taken){
+int other_commands(char* command_split[],int cnt, int mode){
     pid_t pid = fork();
     if(pid == -1){
         print_error("Error creating child process");
@@ -71,7 +77,7 @@ int other_commands(char* command_split[],int cnt, int mode,char *time_taken){
     }else{
         if(mode == 0){
             // printf("Foreground Child started with %d\n",pid);
-            time_t start = time(NULL);
+            time_t start = process_start_time;
             wait(NULL);
             time_t run_time = time(NULL) - start;
             if(run_time >= 1){

@@ -1,37 +1,35 @@
 #include "../headers.h"
 #include "../out_module/print_error.h"
+#include "cd.h"
 
-int is_directory(const char *fileName){
-    struct stat path;
-    stat(fileName, &path);
-    if (stat(fileName, &path) == -1){
-        return -1;
-    }
-    return S_ISDIR(path.st_mode);
-}
+extern size_t MAXIMUM_DIRECTORY_LENGTH;
+extern char *home_directory;
+extern char *relative_dir;
+extern char *absolute_dir;
+extern char *prev_directory;
 
-int change_directory(char *absolute_path, char *relative_path, char *input, char *home_path, char* old_directory, size_t MAXIMUM_DIRECTORY_LENGTH){
+int change_directory(char *input){
     char new_dir[MAXIMUM_DIRECTORY_LENGTH];
     if(input[0]== '~'){
-        sprintf(new_dir,"%s%s",home_path,(input+1));
+        sprintf(new_dir,"%s%s",home_directory,(input+1));
     }else if(input[0] == '-'){
-        if(old_directory[0] == '\0'){
+        if(prev_directory[0] == '\0'){
             print_error("OLDPWD not set");
             return 0;
         }
-        sprintf(new_dir,"%s%s",old_directory,(input+1));
+        sprintf(new_dir,"%s%s",prev_directory,(input+1));
     }
     else{
         strcpy(new_dir,input);
     }
     int retvalue = chdir(new_dir);
     if(retvalue == 0){
-        strcpy(old_directory,absolute_path);
-        absolute_path = getcwd(absolute_path,MAXIMUM_DIRECTORY_LENGTH);
-        if(strncmp(absolute_path,home_path,strlen(home_path)) == 0){
-            sprintf(relative_path,"~%s",&absolute_path[strlen(home_path)]);
+        strcpy(prev_directory,absolute_dir);
+        absolute_dir = getcwd(absolute_dir,MAXIMUM_DIRECTORY_LENGTH);
+        if(strncmp(absolute_dir,home_directory,strlen(home_directory)) == 0){
+            sprintf(relative_dir,"~%s",&absolute_dir[strlen(home_directory)]);
         }else{
-            strcpy(relative_path,absolute_path);
+            strcpy(relative_dir,absolute_dir);
         }
     }else{
         perror("\033[0;31mError ");
