@@ -3,7 +3,7 @@
 #include "../out_module/prompt.h"
 #include "../Linked_list/my_dll.h"
 #include "../Linked_list/node.h"
-#include "./process_creation.h"
+#include "./Helpers.h"
 
 extern char *username;
 extern char *home_directory;

@@ -1,12 +1,7 @@
 #include "../headers.h"
-#include "../commands/cd.h"
-#include "../commands/pwd.h"
-#include "../commands/echo.h"
-#include "../commands/ls.h"
-#include "./process_creation.h"
-#include "./command_helper.h"
+#include "../commands/commands.h"
 #include "../out_module/print_error.h"
-#include "./command_helper.h"
+#include "./Helpers.h"
 
 extern size_t MAX_NO_OF_PARTS;
 extern size_t MAXIMUM_NO_OF_INNER_FILES;

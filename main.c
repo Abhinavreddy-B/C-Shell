@@ -1,7 +1,6 @@
 #include "out_module/prompt.h"
 #include "headers.h"
-#include "Helpers/command_helper.h"
-#include "Helpers/getinfo.h"
+#include "Helpers/Helpers.h"
 #include "Linked_list/node.h"
 #include "Linked_list/my_dll.h"
 

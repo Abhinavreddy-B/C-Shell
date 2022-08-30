@@ -1,5 +1,5 @@
 #include "../headers.h"
-#include "getinfo.h"
+#include "Helpers.h"
 
 int get_username(char** username_ptr,char errors[]){
     *username_ptr = getlogin();

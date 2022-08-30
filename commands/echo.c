@@ -1,5 +1,5 @@
 #include "../headers.h"
-#include "./echo.h"
+#include "./commands.h"
 
 void echo(char* input[],int cnt){
     if(cnt==1){

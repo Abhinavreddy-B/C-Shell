@@ -1,5 +1,5 @@
 #include "../headers.h"
-#include "./pwd.h"
+#include "./commands.h"
 
 extern char *absolute_dir;
 
