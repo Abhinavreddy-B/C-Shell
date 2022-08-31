@@ -5,6 +5,8 @@
 #include "../Linked_list/node.h"
 #include "./Helpers.h"
 
+#define INVALID_EXIT 2
+
 extern char *username;
 extern char *home_directory;
 extern char *system_name;
@@ -18,7 +20,7 @@ void add_process_to_list(char* name,pid_t pid){
     ListElement_ptr new_process = (ListElement_ptr) malloc(sizeof(ListElement));
     new_process->name = (char *) malloc(MAXIMUM_BACKGROUND_PROCESS_NAME * sizeof(char));
     strcpy(new_process->name,name);
-    printf("%p\n", (void *)  new_process);
+    // printf("%p\n", (void *)  new_process);
     // printf("%s\n",new_process->name);
     new_process->pid = pid;
     insert(&background_process_list , new_process);
@@ -32,7 +34,7 @@ void upon_child_exit(){
     }else{
         printf("\n");
         ListElement_ptr found = Find_and_return(&background_process_list,child_pid);
-        printf("%p\n",(void *) found);
+        // printf("%p\n",(void *) found);
         if(found == NULL){
             printf("Some problem\nabnormal interrupt\n");
             return;
@@ -70,15 +72,18 @@ int other_commands(char* command_split[],int cnt, int mode){
         command_split[cnt]=NULL;
         int ret_val = execvp(command_split[0],command_split);
         if(ret_val == -1){
-            print_error("No such Builtin command or external executable");
+            char error[500];
+            sprintf(error,"%s: No such Builtin command or external executable",command_split[0]);
+            print_error(error);
             perror("\033[31;1mError\033[0m");
-            exit(1);
+            exit(INVALID_EXIT);
         }
     }else{
         if(mode == 0){
             // printf("Foreground Child started with %d\n",pid);
             time_t start = process_start_time;
-            wait(NULL);
+            int wstatus;
+            waitpid(pid,&wstatus,WSTOPPED | WSTOPPED);
             time_t run_time = time(NULL) - start;
             if(run_time >= 1){
                 // printf("Completed child process with %ld Seconds\n",run_time);

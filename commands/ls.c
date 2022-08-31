@@ -144,7 +144,7 @@ int print_ls_helper(char *path_input,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidde
         stat(path,&file_props);
         if (mode == 0){
             printf("%s\n", name);
-            if( file_props.st_mode & S_IRUSR ){
+            if( file_props.st_mode & S_IXUSR ){
                 print_name(name, 2);
             }else{
                 print_name(name,0);

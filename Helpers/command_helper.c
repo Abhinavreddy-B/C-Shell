@@ -34,18 +34,16 @@ void splitter(char *command, int mode)
             change_directory(command_split[1]);
         }
     }else if(strcmp(command_split[0],"pwd") == 0){
-        if(cnt == 1){
-            present_working_directory();
-        }else{
-            print_error("Invalid No Of arguments");
-            return;
-        }
+        present_working_directory();
     }else if(strcmp(command_split[0],"echo")==0){
         echo(command_split,cnt);
     }else if(strcmp(command_split[0],"ls") == 0){
         // printf("Hello\n");
         ls(command_split,cnt,MAXIMUM_NO_OF_INNER_FILES);
-    }else{
+    }else if(strcmp(command_split[0],"discover") == 0){
+        discover_folder(command_split,cnt);
+    }
+    else{
         // int is_background_task = 0;
         // if(command_split[cnt-1][strlen(command_split[cnt-1])-1] == '&'){
             // command_split[cnt-1][strlen(command_split[cnt-1])-1] = '\0';

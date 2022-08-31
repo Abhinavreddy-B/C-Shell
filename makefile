@@ -1,6 +1,6 @@
 flags = -pedantic -Wall -g
 
-main: main.c getinfo.o prompt.o cd.o print_error.o command_helper.o pwd.o echo.o ls.o process_creation.o my_dll.o node.o
+main: main.c getinfo.o prompt.o cd.o print_error.o command_helper.o pwd.o echo.o ls.o process_creation.o my_dll.o node.o discover.o
 	gcc $(flags) main.c *.o -o main 
 
 getinfo.o: ./Helpers/getinfo.c
@@ -26,6 +26,9 @@ echo.o: ./commands/echo.c
 
 ls.o: ./commands/ls.c
 	gcc $(flags) -c ./commands/ls.c
+
+discover.o: ./commands/discover.c
+	gcc $(flags) -c ./commands/discover.c
 
 process_creation.o: ./Helpers/process_creation.c
 	gcc $(flags) -c ./Helpers/process_creation.c
