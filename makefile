@@ -1,16 +1,25 @@
 flags = -pedantic -Wall -g
 
-main: main.c getinfo.o prompt.o cd.o print_error.o command_helper.o pwd.o echo.o ls.o process_creation.o my_dll.o node.o discover.o
+main: main.c getinfo.o prompt.o check_invalid.o cd.o print_error.o command_helper.o pwd.o echo.o ls.o process_creation.o my_dll.o node.o discover.o History.o history.o
 	gcc $(flags) main.c *.o -o main 
 
 getinfo.o: ./Helpers/getinfo.c
 	gcc $(flags) -c ./Helpers/getinfo.c
+
+History.o: ./Helpers/History.c
+	gcc $(flags) -c ./Helpers/History.c
 
 prompt.o: ./out_module/prompt.c
 	gcc $(flags) -c ./out_module/prompt.c
 
 cd.o: ./commands/cd.c
 	gcc $(flags) -c ./commands/cd.c
+
+history.o: ./commands/history.c
+	gcc $(flags) -c ./commands/history.c
+
+check_invalid.o: ./Helpers/check_invalid.c
+	gcc $(flags) -c ./Helpers/check_invalid.c
 
 print_error.o: ./out_module/print_error.c
 	gcc $(flags) -c ./out_module/print_error.c

@@ -49,6 +49,7 @@ int discover_folder(char* command[],int cnt){
     int print_dirs = 0;
     int print_files = 0;
     int iter = 1;
+    int flags_exist = 0;
     if(cnt==1 || command[1][0]=='-'){
         strcpy(path,".");
     }else{
@@ -58,17 +59,21 @@ int discover_folder(char* command[],int cnt){
     while(iter < cnt && command[iter][0] == '-'){
         if(strcmp(command[iter],"-f") == 0){
             print_files = 1;
+            flags_exist =1;
         }else if(strcmp(command[iter],"-d") == 0){
             print_dirs = 1;
+            flags_exist =1;
         }else if(strcmp(command[iter],"-fd") == 0 || strcmp(command[iter],"-df") == 0){
             print_files = 1;
             print_dirs = 1;
+            flags_exist =1;
         }else if(command[iter][0]=='-'){
             char error[1001];
             sprintf(error,"Invalid Flag %s",command[iter]);
             print_error(error);
             return -1;
         }
+        iter++;
     }
     if(print_dirs == 0 && print_files == 0){
         print_dirs = 1;
@@ -83,18 +88,23 @@ int discover_folder(char* command[],int cnt){
         print_error("Invalid Number Of Arguments for the command \"discover\"");
         return -1;
     }
+    if(target != NULL && flags_exist == 1){
+        print_error("Invalid use-case of \"discover\", cannot have both flags and target at the same time");
+        return -1;
+    }
     char scannabe_path_abs[MAXIMUM_DIRECTORY_LENGTH];
     char scannabe_path_rel[MAXIMUM_DIRECTORY_LENGTH];
     strcpy(scannabe_path_rel, path);
     if (path[0] == '~')
     {
-        sprintf(scannabe_path_abs, "%s%s", home_directory, &path[0]);
+        // printf("Hello\n");
+        sprintf(scannabe_path_abs, "%s%s", home_directory, &path[1]);
     }
     else
     {
         strcpy(scannabe_path_abs, path);
     }
-    printf("%p\n",target);
+    // printf("%p\n",target);
     recursive_printer(scannabe_path_abs, scannabe_path_rel,print_dirs,print_files,target);
     return 0;
 }

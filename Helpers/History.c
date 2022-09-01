@@ -4,15 +4,30 @@ extern size_t MAXIMUM_INPUT_SIZE;
 
 int load_to_history(FILE* input, char* history[20]){
     int cnt=0;
-    while(scanf("%[^\n]s",history[cnt]) != EOF){
+    while(fscanf(input,"%[^\n]s",history[cnt]) != EOF && cnt <=20 && history[cnt] != NULL){
+        // printf("%s -\n",history[cnt]);
         fgetc(input);
         cnt++;
     }
-    fseek(input,0,SEEK_SET);
-    return 0;
+    // printf("%d\n",cnt);
+    return cnt;
 }
 
-int add_to_history(char *command, char* history[20],FILE* output){
+void add_to_history(char *command, char* history[20],FILE* output,int* no_of_existing_history){
+    // printf("%d\n",*no_of_existing_history);
+    if(*no_of_existing_history < 20){
+        // printf("%d\n",fseek(output,0,SEEK_END));
+    // printf("%d\n",*no_of_existing_history);
+        strcpy(history[*no_of_existing_history],command);
+    // printf("%d\n",*no_of_existing_history);
+        // printf("%s\n",command);
+        for(int i=0;i<=(*no_of_existing_history);i++){
+            fprintf(output,"%s\n",history[i]);
+            // printf("%s\n",history[i]);
+        }
+        (*no_of_existing_history)++;
+        return;
+    }
     free(history[0]);
     fseek(output,0,SEEK_SET);
     for(int i=0;i<19;i++){
@@ -23,5 +38,3 @@ int add_to_history(char *command, char* history[20],FILE* output){
     strcpy(history[19],command);
     fprintf(output,"%s\n",history[19]);
 }
-
-int History_command()

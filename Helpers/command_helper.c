@@ -22,6 +22,9 @@ void splitter(char *command, int mode)
         part = command_split[cnt] = strtok (NULL, " \t");
     }
     if(cnt == 0){
+        // if(!is_last){
+            // print_error("Invalid Command, syntax error");
+        // }
         return;
     }
     if(strcmp(command_split[0],"cd") == 0){
@@ -42,6 +45,8 @@ void splitter(char *command, int mode)
         ls(command_split,cnt,MAXIMUM_NO_OF_INNER_FILES);
     }else if(strcmp(command_split[0],"discover") == 0){
         discover_folder(command_split,cnt);
+    }else if(strcmp(command_split[0],"history") == 0){
+        get_history();
     }
     else{
         // int is_background_task = 0;
@@ -55,8 +60,13 @@ void splitter(char *command, int mode)
 
 void AndTokeniser(char *command_input){
     char command[MAXIMUM_INPUT_SIZE];
-    strcpy(command,command_input);
-    strcat(command," ");
+    if(strstr(command_input,"&&") != NULL){
+        print_error("Invalid Command, syntax error");
+        return;
+    }
+    // strcpy(command,command_input);
+    // strcat(command," ");
+    sprintf(command," %s ",command_input);
     char* command_split[MAX_NO_OF_PARTS];
     char* part;
     int cnt=0;
@@ -68,24 +78,32 @@ void AndTokeniser(char *command_input){
     for(int i=0;i<cnt-1;i++){
         splitter(command_split[i],1);
     }
-    splitter(command_split[cnt-1],0);
+    // command_split[cnt-1][strlen(command_split[cnt-1])-1] = '\0';
+    if(strlen(command_split[cnt-1])!=1){
+        splitter(command_split[cnt-1],0);
+    }
+        
 }
 
 void shell_helper(char *input)
 {
-    // char input_temp[MAXIMUM_INPUT_SIZE];
-    // remove_unnecessary(input,input_temp);
+    // strcat(input," ");
+    char modified_input[MAXIMUM_INPUT_SIZE];
+    sprintf(modified_input," %s ",input);
     size_t MAXIMUM_NO_OF_TOKENS = 101LL ;
     char* split_input[MAXIMUM_NO_OF_TOKENS];
-    // printf("%s\n",input);
     char* token;
     int tokencnt=0;
-    token = split_input[tokencnt] =strtok(input,";");
+    token = split_input[tokencnt] =strtok(modified_input,";");
     while(token != NULL){
         tokencnt++;
         token = split_input[tokencnt] = strtok(NULL,";");
     }
-    for(int i=0;i<tokencnt;i++){
+    if(tokencnt == 0){
+        print_error("Invalid Command, syntax error");
+        return;
+    }
+    for(int i=0;i<tokencnt;i++){;
         // printf ("%s\n",split_input[i]);
         // printf("Hello\n");
         AndTokeniser(split_input[i]);

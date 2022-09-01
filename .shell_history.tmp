@@ -1,0 +1,20 @@
+ls -l
+ls
+ls -l
+ls -l
+cd ..
+cd test
+ls
+ls -l
+cd ../test
+ls -l
+ls -l
+ls -l
+ls -l
+ls -l
+ls -l
+ls -l
+ls -l
+ls -l
+cd ../test
+ls -l

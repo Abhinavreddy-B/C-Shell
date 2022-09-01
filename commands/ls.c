@@ -5,16 +5,6 @@
 extern size_t MAXIMUM_DIRECTORY_LENGTH;
 extern char *home_directory;
 
-// int cmp(const void* a,const void* b){
-//     char * n1 = (char *) (*((struct dirent **) a))->d_name;
-//     char * n2 = (char *) (*((struct dirent **) b))->d_name;
-//     return strcmp(n1,n2);
-// }
-
-// void sort(struct dirent* arr[],int cnt){
-//     qsort(arr,cnt,sizeof(struct dirent*),cmp);
-// }
-
 int masks[3][3] = {{S_IRUSR,S_IWUSR,S_IXUSR},{S_IRGRP,S_IWGRP,S_IXGRP},{S_IROTH,S_IWOTH,S_IXOTH}};
 char depiction[3] = {'r','w','x'};
 
@@ -59,10 +49,19 @@ void print_detail(char* name,struct stat file_props){
     printf("%-15.15s ", getgrgid(file_props.st_gid)->gr_name);
     printf("%6ld ",file_props.st_size);
     
-    char buff[35];
+    time_t curr_time = time(NULL);
+    struct tm* current_time_format = localtime(&curr_time);
+    int monthes = ( (current_time_format->tm_year)*12 + current_time_format->tm_mon );
     struct tm * timeinfo;
     timeinfo = localtime (&(file_props.st_mtim.tv_sec));
-    strftime(buff, sizeof(buff), "%b %d %H:%M", timeinfo);
+
+    char buff[35];
+    if( monthes - timeinfo->tm_year*12 - timeinfo->tm_mon > 6){
+        strftime(buff, sizeof(buff), "%b %d %Y", timeinfo);
+    }else{
+        strftime(buff, sizeof(buff), "%b %d %H:%M", timeinfo);
+    }
+
     printf("%s ",buff);
     if( S_ISDIR( file_props.st_mode ) != 0){
         print_name(name,1);
