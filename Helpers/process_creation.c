@@ -15,6 +15,7 @@ extern char *relative_dir;
 extern my_dll background_process_list;
 extern int MAXIMUM_BACKGROUND_PROCESS_NAME;
 extern time_t process_start_time;
+extern int is_waiting_for_input;
 
 void add_process_to_list(char* name,pid_t pid){
     ListElement_ptr new_process = (ListElement_ptr) malloc(sizeof(ListElement));
@@ -23,6 +24,7 @@ void add_process_to_list(char* name,pid_t pid){
     // printf("%p\n", (void *)  new_process);
     // printf("%s\n",new_process->name);
     new_process->pid = pid;
+    new_process->index = return_last(&background_process_list) + 1;
     insert(&background_process_list , new_process);
 }
 
@@ -53,7 +55,10 @@ void upon_child_exit(){
             // printf("\033[32;1mPress Enter to Continue...\033[0m");
         }
         printf("\n");
-        prompt(username, system_name, relative_dir, time_taken);
+        // printf("Continue typing....\r");
+        if(is_waiting_for_input){
+            prompt(username, system_name, relative_dir, time_taken);
+        }
         fflush(stdout);
     }
     return;
@@ -70,6 +75,9 @@ int other_commands(char* command_split[],int cnt, int mode){
     }
     if(pid == 0){
         command_split[cnt]=NULL;
+        if(mode == 1){
+            setpgid(0,0);
+        }
         int ret_val = execvp(command_split[0],command_split);
         if(ret_val == -1){
             char error[500];
@@ -94,7 +102,7 @@ int other_commands(char* command_split[],int cnt, int mode){
             // printf("Foreground Child ended with %d\n",pid);
         }else{
             add_process_to_list(command_split[0],pid);
-            printf("[%d] %d\n",get_size(background_process_list),pid);
+            printf("[%d] %d\n",return_last(&background_process_list),pid);
             signal(SIGCHLD,upon_child_exit);
             // return 1;
         }

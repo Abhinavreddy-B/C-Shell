@@ -9,6 +9,7 @@
 typedef struct{
     pid_t pid;
     char* name;
+    int index;
 } ListElement;
 typedef ListElement* ListElement_ptr;
 

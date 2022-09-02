@@ -47,6 +47,8 @@ void splitter(char *command, int mode)
         discover_folder(command_split,cnt);
     }else if(strcmp(command_split[0],"history") == 0){
         get_history();
+    }else if(strcmp(command_split[0],"pinfo") == 0){
+        pinfo_middleware(command_split,cnt);
     }
     else{
         // int is_background_task = 0;

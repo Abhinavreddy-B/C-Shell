@@ -197,7 +197,12 @@ void prune(my_dll* _L){
     }
 }
 
-
+int return_last(my_dll * _L){
+    if(_L == NULL || _L->tail == NULL || _L->tail->data == NULL){
+        return 0;
+    }
+    return _L->tail->data->index;
+}
 
 
 

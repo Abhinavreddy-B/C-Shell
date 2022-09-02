@@ -102,5 +102,6 @@ unsigned int get_size(const my_dll _L);
 
 
 ListElement_ptr Find_and_return(const my_dll* _L,pid_t _pid);
+int return_last(my_dll * _L);
 
 #endif

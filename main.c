@@ -27,6 +27,7 @@ time_t process_start_time;
 char** history;
 char * history_file_path;
 int no_of_commands_in_history;
+int is_waiting_for_input;
 
 int main()
 {
@@ -72,8 +73,10 @@ int main()
         prompt(username, system_name, relative_dir, time_taken);
         input[0]='\0';
         strcpy(previous_input,input);
+        is_waiting_for_input = 1;
         scanf("%[^\n]s", input);
         getchar();
+        is_waiting_for_input = 0;
         process_start_time = time(NULL);
         if(input[0] != '\0'){
             if(strcmp(input,previous_input) != 0){
