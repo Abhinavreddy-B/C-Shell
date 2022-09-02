@@ -1,5 +1,5 @@
 #include "../headers.h"
-#include "../out_module/print_error.h"
+#include "../io_module/print_error.h"
 #include "commands.h"
 
 extern size_t MAXIMUM_DIRECTORY_LENGTH;
@@ -14,19 +14,20 @@ int change_directory(char *input){
         sprintf(new_dir,"%s%s",home_directory,(input+1));
     }else if(input[0] == '-'){
         if(input[1]!='\0'){
-            print_error("Unsupported Path\n");
-            return 1;
+            print_error("cd: invalid option\n");
+            return -1;
         }
         if(prev_directory[0] == '\0'){
-            print_error("OLDPWD not set");
-            return 0;
+            print_error("cd: OLDPWD not set");
+            return -1;
         }
         sprintf(new_dir,"%s%s",prev_directory,(input+1));
         printf("%s\n",new_dir);
-    }
-    else{
+        return 0;
+    }else{
         strcpy(new_dir,input);
     }
+
     int retvalue = chdir(new_dir);
     if(retvalue == 0){
         strcpy(prev_directory,absolute_dir);
@@ -37,7 +38,7 @@ int change_directory(char *input){
             strcpy(relative_dir,absolute_dir);
         }
     }else{
-        perror("\033[0;31mError ");
+        perror("\033[1;31mcd: ");
     }
     return 1;
 }

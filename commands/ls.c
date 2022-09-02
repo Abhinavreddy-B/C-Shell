@@ -1,9 +1,19 @@
 #include "../headers.h"
 #include "./commands.h"
-#include "../out_module/print_error.h"
+#include "../io_module/print_error.h"
 
 extern size_t MAXIMUM_DIRECTORY_LENGTH;
 extern char *home_directory;
+
+int cmp(const void* a,const void* b){
+    char * n1 = (char *) (*((struct dirent **) a))->d_name;
+    char * n2 = (char *) (*((struct dirent **) b))->d_name;
+    return strcasecmp(n1,n2);
+}
+
+void sort(struct dirent* arr[],int cnt){
+    qsort(arr,cnt,sizeof(struct dirent*),cmp);
+}
 
 int masks[3][3] = {{S_IRUSR,S_IWUSR,S_IXUSR},{S_IRGRP,S_IWGRP,S_IXGRP},{S_IROTH,S_IWOTH,S_IXOTH}};
 char depiction[3] = {'r','w','x'};
@@ -96,7 +106,7 @@ int print_ls_helper(char *path_input,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidde
         // while ((files[cnt] = prop = readdir(directory)) != NULL){
             // cnt++;
         // }
-        // sort(files, cnt);
+        sort(files, cnt);
         if (mode == 0){
             for (int i = 0; i < cnt; i++){
                 if (hidden == 1 || files[i]->d_name[0] != '.'){

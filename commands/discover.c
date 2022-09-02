@@ -1,12 +1,11 @@
 #include "../headers.h"
-#include "../out_module/print_error.h"
+#include "../io_module/print_error.h"
 
 extern size_t MAXIMUM_DIRECTORY_LENGTH;
 extern size_t MAXIMUM_INNER_DIRECTORIES ;
 extern char *home_directory;
 
 void recursive_printer(char *path_abs,char* path_rel,int print_dirs,int print_files,char *target){
-    // printf("path - %s\n",path_rel);
     DIR * dr = opendir(path_abs);
     struct dirent *prop;
     if(dr != NULL){

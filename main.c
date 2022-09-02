@@ -1,23 +1,23 @@
-#include "out_module/prompt.h"
-#include "out_module/print_error.h"
+#include "io_module/prompt.h"
+#include "io_module/print_error.h"
 #include "headers.h"
 #include "Helpers/Helpers.h"
 #include "Linked_list/node.h"
 #include "Linked_list/my_dll.h"
 
-size_t MAXIMUM_DIRECTORY_LENGTH = 101LL;
-size_t MAXIMUM_INNER_DIRECTORIES = 101LL;
-size_t MAXIMUM_INPUT_SIZE = 101LL;
-const size_t MAXIMUM_ERROR_LENGTH = 101LL;
-const size_t MAXIMUM_SYSTEM_NAME = 101LL;
-const size_t MAXIMUM_TIME_DIFFERENCE_SECONDS = 101LL;
-int MAXIMUM_BACKGROUND_PROCESS_NAME = 101LL;
-size_t MAX_NO_OF_PARTS = 101LL;
-size_t MAXIMUM_NO_OF_INNER_FILES = 101LL;
+const size_t MAXIMUM_DIRECTORY_LENGTH = 1001LL;
+const size_t MAXIMUM_INNER_DIRECTORIES = 1001LL;
+const size_t MAXIMUM_INPUT_SIZE = 1001LL;
+const size_t MAXIMUM_ERROR_LENGTH = 1001LL;
+const size_t MAXIMUM_SYSTEM_NAME = 1001LL;
+const size_t MAXIMUM_TIME_DIFFERENCE_SECONDS = 1001LL;
+const int MAXIMUM_BACKGROUND_PROCESS_NAME = 1001LL;
+const size_t MAX_NO_OF_PARTS = 1001LL;
+const size_t MAXIMUM_NO_OF_INNER_FILES = 1001LL;
 char *username;
 char *home_directory = NULL;
 char *system_name;
-char error_holder[101LL];
+char error_holder[1001LL];
 char *time_taken;
 char *relative_dir;
 char *absolute_dir;
@@ -34,7 +34,7 @@ int main()
     printf("\033[33m******************************************************\n");
     printf("*                    Custom shell                    *\n");
     printf("*                Abhinav Reddy Boddu                 *\n");
-    printf("*                     2021101034                     *\n");
+    printf("*                     20211001034                     *\n");
     printf("******************************************************\n\033[0m");
     history = (char **) malloc(20*sizeof(char *));
     for(int i=0;i<20;i++){
@@ -49,13 +49,10 @@ int main()
     background_process_list = CreateList();
     relative_dir[0] = '~';
     relative_dir[1] = '\0';
-    // printf("Hello\n");
     prev_directory[0] = '\0';
     char input[MAXIMUM_INPUT_SIZE];
     char previous_input[MAXIMUM_INPUT_SIZE];
     previous_input[0] = '\0';
-    // printf("Hello\n");
-    // printf("Hello\n");
     if (get_username(&username, error_holder) || get_systemname(system_name, error_holder) || get_home_dir(&home_directory, MAXIMUM_DIRECTORY_LENGTH, error_holder))
     {
         printf("%s\n", error_holder);
@@ -71,8 +68,8 @@ int main()
     while (1)
     {
         prompt(username, system_name, relative_dir, time_taken);
-        input[0]='\0';
         strcpy(previous_input,input);
+        input[0]='\0';
         is_waiting_for_input = 1;
         scanf("%[^\n]s", input);
         getchar();

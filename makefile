@@ -9,8 +9,8 @@ getinfo.o: ./Helpers/getinfo.c
 History.o: ./Helpers/History.c
 	gcc $(flags) -c ./Helpers/History.c
 
-prompt.o: ./out_module/prompt.c
-	gcc $(flags) -c ./out_module/prompt.c
+prompt.o: ./io_module/prompt.c
+	gcc $(flags) -c ./io_module/prompt.c
 
 cd.o: ./commands/cd.c
 	gcc $(flags) -c ./commands/cd.c
@@ -21,8 +21,8 @@ history.o: ./commands/history.c
 check_invalid.o: ./Helpers/check_invalid.c
 	gcc $(flags) -c ./Helpers/check_invalid.c
 
-print_error.o: ./out_module/print_error.c
-	gcc $(flags) -c ./out_module/print_error.c
+print_error.o: ./io_module/print_error.c
+	gcc $(flags) -c ./io_module/print_error.c
 
 command_helper.o: ./Helpers/command_helper.c
 	gcc $(flags) -c ./Helpers/command_helper.c

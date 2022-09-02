@@ -1,6 +1,6 @@
 #include "../headers.h"
 #include "commands.h"
-#include "../out_module/print_error.h"
+#include "../io_module/print_error.h"
 
 extern char *home_directory;
 // cat /proc/0/status

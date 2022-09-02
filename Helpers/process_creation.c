@@ -1,6 +1,6 @@
 #include "../headers.h"
-#include "../out_module/print_error.h"
-#include "../out_module/prompt.h"
+#include "../io_module/print_error.h"
+#include "../io_module/prompt.h"
 #include "../Linked_list/my_dll.h"
 #include "../Linked_list/node.h"
 #include "./Helpers.h"
