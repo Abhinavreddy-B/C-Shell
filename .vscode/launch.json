@@ -8,7 +8,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "/home/abhinav/abhi/sem3/OS/Assignment2/running-code/main",
+            "program": "/home/abhinav/abhi/sem3/OS/Assignment2/2021101034/main",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

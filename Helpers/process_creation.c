@@ -21,8 +21,6 @@ void add_process_to_list(char* name,pid_t pid){
     ListElement_ptr new_process = (ListElement_ptr) malloc(sizeof(ListElement));
     new_process->name = (char *) malloc(MAXIMUM_BACKGROUND_PROCESS_NAME * sizeof(char));
     strcpy(new_process->name,name);
-    // printf("%p\n", (void *)  new_process);
-    // printf("%s\n",new_process->name);
     new_process->pid = pid;
     new_process->index = return_last(&background_process_list) + 1;
     insert(&background_process_list , new_process);
@@ -36,7 +34,6 @@ void upon_child_exit(){
     }else{
         printf("\n");
         ListElement_ptr found = Find_and_return(&background_process_list,child_pid);
-        // printf("%p\n",(void *) found);
         if(found == NULL){
             printf("Some problem\nabnormal interrupt\n");
             return;
@@ -44,18 +41,14 @@ void upon_child_exit(){
             printf("%s with pid = %d exited ", found->name ,found->pid);
             delete( &background_process_list , Find(&background_process_list,child_pid));
         }
-        // printf("Something\n");
         if(WIFEXITED(status)){
             printf("normally");
-            // printf("\033[32;1mPress Enter to Continue...\033[0m");
         }else if(WIFSIGNALED(status)){
             printf("Exited Abnomally");
             fflush(stdin);
             psignal(WTERMSIG(status),"Cause");
-            // printf("\033[32;1mPress Enter to Continue...\033[0m");
         }
         printf("\n");
-        // printf("Continue typing....\r");
         if(is_waiting_for_input){
             prompt(username, system_name, relative_dir, time_taken);
         }
@@ -88,18 +81,15 @@ int other_commands(char* command_split[],int cnt, int mode){
         }
     }else{
         if(mode == 0){
-            // printf("Foreground Child started with %d\n",pid);
             time_t start = process_start_time;
             int wstatus;
             waitpid(pid,&wstatus,WSTOPPED | WSTOPPED);
             time_t run_time = time(NULL) - start;
             if(run_time >= 1){
-                // printf("Completed child process with %ld Seconds\n",run_time);
                 sprintf(time_taken,"|taken %lds",run_time);
             }else{
                 time_taken[0]='\0';
             }
-            // printf("Foreground Child ended with %d\n",pid);
         }else{
             add_process_to_list(command_split[0],pid);
             printf("[%d] %d\n",return_last(&background_process_list),pid);

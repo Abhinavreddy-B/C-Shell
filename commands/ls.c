@@ -50,6 +50,7 @@ void print_name(char* name,int mode){
         //executables
         printf("\033[32m\033[1m%s\033[0m",name);
     }
+    printf("\n");
 }
 
 void print_detail(char* name,struct stat file_props){
@@ -80,13 +81,13 @@ void print_detail(char* name,struct stat file_props){
     }else{
         print_name(name,0);
     }
-    printf("\n");
 }
 
 // mode = 0 means brief , mode = 1 means detail
 // many is 1 when there are more than 1 paths to be printed, else many is 0
 int print_ls_helper(char *path_input,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidden, int mode,int many )
 {
+    // printf("Hello\n");
     // printf("%s\n",path_input);
     // DIR *directory;
     char path[MAXIMUM_DIRECTORY_LENGTH] ;
@@ -100,8 +101,9 @@ int print_ls_helper(char *path_input,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidde
     cnt = scandir(path,&files,NULL,alphasort);
     if (cnt != -1)
     {
+        // printf("inside\n");
         if(many){
-            printf("\n\033[41:32m%s\033[0m\n---------------------------------\n",path);
+            printf("\n\033[41:32m%s:\033[0m\n",path);
         }
         // while ((files[cnt] = prop = readdir(directory)) != NULL){
             // cnt++;
@@ -121,7 +123,7 @@ int print_ls_helper(char *path_input,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidde
                     }else{
                         print_name(files[i]->d_name, 0);
                     }
-                    printf("\n");
+                    // printf("\n");
                     // printf("%s\t", files[i]->d_name);
                 }
             }
@@ -139,8 +141,9 @@ int print_ls_helper(char *path_input,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidde
         }
         // closedir(directory);
     }else if(errno == ENOTDIR){
+        // printf("Double\n");
         if(many){
-            printf("\n---------------------------------\n");
+            printf("\n");
         }
         // struct dirent *file = readdir(directory);
         char name[100000];
@@ -152,7 +155,6 @@ int print_ls_helper(char *path_input,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidde
 
         stat(path,&file_props);
         if (mode == 0){
-            printf("%s\n", name);
             if( file_props.st_mode & S_IXUSR ){
                 print_name(name, 2);
             }else{
@@ -196,8 +198,11 @@ int ls(char* command[],int cnt,size_t MAXIMUM_NO_OF_INNER_PARTS){
         print_ls_helper(".",MAXIMUM_NO_OF_INNER_PARTS,hidden,mode,0);
         return 0;
     }
+    // printf("%d\n",total_paths);
     for(int i=0;i<total_paths;i++){
+        // printf("\nstart\n");
         print_ls_helper(total_list[i],MAXIMUM_NO_OF_INNER_PARTS,hidden,mode,(total_paths != 1));
+        // printf("\nend\n");
     }
     return 0;
 }

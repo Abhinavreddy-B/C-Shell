@@ -14,8 +14,6 @@ int pinfo(pid_t pid){
     char pinfo_filepath[30];
     sprintf(pinfo_filepath,"/proc/%d/stat",pid);
     FILE* pinfo_file = fopen(pinfo_filepath,"r");
-    // char garbage[1000];
-    // read_garbage(garbage,pinfo_file,2);
     char executable_path[1000];
     char status;
     unsigned long virtual_memory;
@@ -26,7 +24,6 @@ int pinfo(pid_t pid){
     fclose(pinfo_file);
     sprintf(pinfo_filepath,"/proc/%d/exe",pid);
     readlink(pinfo_filepath,executable_path,1000);
-    // read_garbage()                                                                                                                           
     printf("pid : %d\n",pid);
     if(pgrp == tpgid){
         printf("process status : %c+\n",status);
@@ -43,7 +40,6 @@ int pinfo(pid_t pid){
 }
 
 int pinfo_middleware(char* command[],int cnt){
-    // printf("Hello world\n");
     if(cnt > 2){
         print_error("Invalid no of arguments for \"pinfo\"");
     }

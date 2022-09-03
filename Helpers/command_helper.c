@@ -12,7 +12,6 @@ extern size_t MAXIMUM_INPUT_SIZE;
 */
 void splitter(char *command, int mode)
 { 
-    // printf("%s\n",command);
     char* command_split[MAX_NO_OF_PARTS];
     char* part;
     int cnt=0;
@@ -105,9 +104,7 @@ void shell_helper(char *input)
         print_error("Invalid Command, syntax error");
         return;
     }
-    for(int i=0;i<tokencnt;i++){;
-        // printf ("%s\n",split_input[i]);
-        // printf("Hello\n");
+    for(int i=0;i<tokencnt;i++){
         AndTokeniser(split_input[i]);
     }
 }

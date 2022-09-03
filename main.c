@@ -34,7 +34,7 @@ int main()
     printf("\033[33m******************************************************\n");
     printf("*                    Custom shell                    *\n");
     printf("*                Abhinav Reddy Boddu                 *\n");
-    printf("*                     20211001034                     *\n");
+    printf("*                     2021101034                     *\n");
     printf("******************************************************\n\033[0m");
     history = (char **) malloc(20*sizeof(char *));
     for(int i=0;i<20;i++){
@@ -62,7 +62,7 @@ int main()
     sprintf(history_file_path,"%s/.shell_history.tmp",home_directory);
     FILE* history_file = fopen(history_file_path,"r");
     if(history_file != NULL){
-        no_of_commands_in_history = load_to_history(history_file,history);
+        no_of_commands_in_history = load_to_history(history_file,history,input);
         fclose(history_file);
     }
     while (1)
