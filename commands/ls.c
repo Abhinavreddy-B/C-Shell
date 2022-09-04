@@ -54,7 +54,7 @@ void print_name(char* name,int mode){
 }
 
 void print_detail(char* name,struct stat file_props){
-    print_Format_permissions(file_props.st_ino,S_ISDIR(file_props.st_mode));
+    print_Format_permissions(file_props.st_mode,S_ISDIR(file_props.st_mode));
     printf("%4ld ",file_props.st_nlink);
     printf("%-15.15s ", getpwuid(file_props.st_uid)->pw_name);
     printf("%-15.15s ", getgrgid(file_props.st_gid)->gr_name);
@@ -83,6 +83,19 @@ void print_detail(char* name,struct stat file_props){
     }
 }
 
+int cnt_total(char* path , struct dirent **files,int hidden,int cnt){
+    int total = 0;
+    for (int i = 0; i < cnt; i++){
+        if (hidden == 1 || files[i]->d_name[0] != '.'){
+            struct stat file_props;
+            char temp[10000];
+            sprintf(temp,"%s/%s",path,files[i]->d_name);
+            stat(temp,&file_props);
+            total += file_props.st_blocks;
+        }
+    }
+    return total;
+}
 // mode = 0 means brief , mode = 1 means detail
 // many is 1 when there are more than 1 paths to be printed, else many is 0
 int print_ls_helper(char *path_input,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidden, int mode,int many )
@@ -129,6 +142,10 @@ int print_ls_helper(char *path_input,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidde
             }
             // printf("\n");
         }else{
+            struct stat dirstats;
+            stat(path,&dirstats);
+            printf("total %ld\n",dirstats.st_blocks);
+            // printf("total %d\n",cnt_total(path,files,hidden,cnt)/2);
             for (int i = 0; i < cnt; i++){
                 if (hidden == 1 || files[i]->d_name[0] != '.'){
                     struct stat file_props;

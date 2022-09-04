@@ -23,7 +23,8 @@ int pinfo(pid_t pid){
 
     fclose(pinfo_file);
     sprintf(pinfo_filepath,"/proc/%d/exe",pid);
-    readlink(pinfo_filepath,executable_path,1000);
+    int no_of_chars_read = readlink(pinfo_filepath,executable_path,1000);
+    executable_path[no_of_chars_read] = '\0';
     printf("pid : %d\n",pid);
     if(pgrp == tpgid){
         printf("process status : %c+\n",status);

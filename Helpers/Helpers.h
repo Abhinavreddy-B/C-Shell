@@ -10,5 +10,6 @@ int other_commands(char* command_split[],int cnt, int mode);
 int load_to_history(FILE* input, char* history[20],char* previous_command);
 void add_to_history(char *command, char* history[20],FILE* output,int* no_of_existing_history);
 int check_if_valid_syntax(char * input);
+void upon_child_exit();
 
 #endif

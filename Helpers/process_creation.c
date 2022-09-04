@@ -28,7 +28,7 @@ void add_process_to_list(char* name,pid_t pid){
 
 void upon_child_exit(){
     int status;
-    pid_t child_pid = waitpid(-1,&status,WNOHANG);
+    pid_t child_pid = waitpid(-1,&status,WNOHANG | WUNTRACED);
     if(child_pid == 0 || child_pid == -1){
         // nothing for now
     }else{
@@ -68,6 +68,7 @@ int other_commands(char* command_split[],int cnt, int mode){
     }
     if(pid == 0){
         command_split[cnt]=NULL;
+
         if(mode == 1){
             setpgid(0,0);
         }
