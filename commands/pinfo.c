@@ -14,6 +14,10 @@ int pinfo(pid_t pid){
     char pinfo_filepath[30];
     sprintf(pinfo_filepath,"/proc/%d/stat",pid);
     FILE* pinfo_file = fopen(pinfo_filepath,"r");
+    if(pinfo_file == NULL){
+        print_error("No process exists with the given ID");
+        return -1;
+    }
     char executable_path[1000];
     char status;
     unsigned long virtual_memory;
@@ -23,6 +27,7 @@ int pinfo(pid_t pid){
 
     fclose(pinfo_file);
     sprintf(pinfo_filepath,"/proc/%d/exe",pid);
+    executable_path[0]='\0';
     int no_of_chars_read = readlink(pinfo_filepath,executable_path,1000);
     executable_path[no_of_chars_read] = '\0';
     printf("pid : %d\n",pid);
@@ -32,6 +37,9 @@ int pinfo(pid_t pid){
         printf("process status : %c\n",status);
     }
     printf("memory : %lu\n",virtual_memory);
+    if(no_of_chars_read == -1){
+        printf("executable path : \033[1;31mPermission Denied\n");
+    }else
     if(strncmp(executable_path,home_directory,strlen(home_directory)) == 0){
         printf("executable path : ~%s\n",&executable_path[strlen(home_directory)]);
     }else{

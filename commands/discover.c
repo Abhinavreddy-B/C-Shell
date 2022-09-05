@@ -52,7 +52,7 @@ int discover_folder(char* command[],int cnt){
     int print_dirs = 0;
     int print_files = 0;
     int iter = 1;
-    if(cnt==1 || command[1][0]=='-'){
+    if(cnt==1 || command[1][0]=='-' || command[1][0] == '\"'){
         strcpy(path,".");
     }else{
         strcpy(path,command[1]);
@@ -92,6 +92,9 @@ int discover_folder(char* command[],int cnt){
         // print_error("Invalid use-case of \"discover\", cannot have both flags and target at the same time");
         // return -1;
     // }
+    if(path[strlen(path)-1] == '/' && strlen(path) != 1){
+        path[strlen(path) - 1] = '\0';
+    }
     char scannable_path_abs[MAXIMUM_DIRECTORY_LENGTH];
     char scannable_path_rel[MAXIMUM_DIRECTORY_LENGTH];
     strcpy(scannable_path_rel, path);

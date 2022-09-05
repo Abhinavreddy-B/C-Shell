@@ -28,7 +28,7 @@ void add_process_to_list(char* name,pid_t pid){
 
 void upon_child_exit(){
     int status;
-    pid_t child_pid = waitpid(-1,&status,WNOHANG | WUNTRACED);
+    pid_t child_pid = waitpid(-1,&status,WNOHANG);
     if(child_pid == 0 || child_pid == -1){
         // nothing for now
     }else{
@@ -84,7 +84,7 @@ int other_commands(char* command_split[],int cnt, int mode){
         if(mode == 0){
             time_t start = process_start_time;
             int wstatus;
-            waitpid(pid,&wstatus,WSTOPPED | WSTOPPED);
+            waitpid(pid,&wstatus,WSTOPPED);
             time_t run_time = time(NULL) - start;
             if(run_time >= 1){
                 sprintf(time_taken,"|taken %lds",run_time);

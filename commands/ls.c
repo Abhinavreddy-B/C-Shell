@@ -144,8 +144,7 @@ int print_ls_helper(char *path_input,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidde
         }else{
             struct stat dirstats;
             stat(path,&dirstats);
-            printf("total %ld\n",dirstats.st_blocks);
-            // printf("total %d\n",cnt_total(path,files,hidden,cnt)/2);
+            printf("total %d\n",cnt_total(path,files,hidden,cnt)/2);
             for (int i = 0; i < cnt; i++){
                 if (hidden == 1 || files[i]->d_name[0] != '.'){
                     struct stat file_props;
