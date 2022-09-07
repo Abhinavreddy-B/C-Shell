@@ -23,7 +23,6 @@ int change_directory(char *input){
         }
         sprintf(new_dir,"%s%s",prev_directory,(input+1));
         printf("%s\n",new_dir);
-        return 0;
     }else{
         strcpy(new_dir,input);
     }
@@ -32,6 +31,10 @@ int change_directory(char *input){
     if(retvalue == 0){
         strcpy(prev_directory,absolute_dir);
         absolute_dir = getcwd(absolute_dir,MAXIMUM_DIRECTORY_LENGTH);
+        if(absolute_dir == NULL){
+            perror("\033[31;1m Error ");
+            return -1;
+        }
         if(strncmp(absolute_dir,home_directory,strlen(home_directory)) == 0){
             sprintf(relative_dir,"~%s",&absolute_dir[strlen(home_directory)]);
         }else{

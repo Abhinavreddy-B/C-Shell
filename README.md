@@ -2,40 +2,38 @@
 # File structure
 ```
 .
-├── main
 ├── main.c
-├── headers.h
 ├── makefile
 ├── README.md
+├── headers.h
 ├── commands
-│   ├── commands.h
-│   │
 │   ├── cd.c
+│   ├── commands.h
 │   ├── discover.c
 │   ├── echo.c
 │   ├── history.c
 │   ├── ls.c
 │   ├── pinfo.c
 │   └── pwd.c
-│
 ├── Helpers
-│   ├── Helpers.h
-│   │
 │   ├── check_invalid.c
 │   ├── command_helper.c
 │   ├── getinfo.c
+│   ├── Helpers.h
 │   ├── History.c
 │   └── process_creation.c
-│
-├── Linked_list
-│   └── Linked list adt
-│
-└── io_module
-    ├── print_error.h
-    ├── prompt.h
-    │
-    ├── print_error.c
-    └── prompt.c
+├── io_module
+│   ├── print_error.c
+│   ├── print_error.h
+│   ├── prompt.c
+│   └── prompt.h
+└── Linked_list
+    ├── Makefile
+    ├── my_dll.c
+    ├── my_dll.h
+    ├── node.c
+    └── node.h
+
 ```
 ## folder structure:
  > `commands:` contains implementations of built-in commands
@@ -51,6 +49,8 @@
 
  > assuming precendence order is `';'`>`'&'`>(spaces and tabs) . So tokenising accordingly.
 
+ > Please use a terminal window of sufficient width so that text wrat does not cause any problem
+ 
 1. cd:
     * Not handling `~` when `~` is not at the start of the path (similar to bash).
     * maximum length of paths is `1001` chars
@@ -64,6 +64,7 @@
     * implemented same as that of Bash.
     * assumed that there cant be paths like `/` , where there are some special files / folders which are not handlable.
     * if there are multiple files / folders as arguments , we printed in the same order as given to us ( Bash prints for files first and directories next ).
+    * if the user name , or group name exceeds 15 characters , only the first 15 chars of their name are printed.
 5. pinfo:
     * cannot read the executable path for certain processes like `systemd` ( pid - 1 ) , where user does not have appropriate permissions.
 6. History:

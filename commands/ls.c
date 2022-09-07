@@ -18,12 +18,15 @@ void sort(struct dirent* arr[],int cnt){
 int masks[3][3] = {{S_IRUSR,S_IWUSR,S_IXUSR},{S_IRGRP,S_IWGRP,S_IXGRP},{S_IROTH,S_IWOTH,S_IXOTH}};
 char depiction[3] = {'r','w','x'};
 
-void print_Format_permissions(ino_t perms,int is_directory){
+void print_Format_permissions(ino_t perms,int is_directory,int is_link){
     char str[11];
     str[10]='\0';
     if(is_directory){
         str[0] = 'd';
-    }else{
+    }else if(is_link){
+        str[0] = 'l';
+    }else
+    {
         str[0]='-';
     }
     for(int i=0;i<9;i++){
@@ -54,11 +57,11 @@ void print_name(char* name,int mode){
 }
 
 void print_detail(char* name,struct stat file_props){
-    print_Format_permissions(file_props.st_mode,S_ISDIR(file_props.st_mode));
-    printf("%4ld ",file_props.st_nlink);
-    printf("%-15.15s ", getpwuid(file_props.st_uid)->pw_name);
-    printf("%-15.15s ", getgrgid(file_props.st_gid)->gr_name);
-    printf("%6ld ",file_props.st_size);
+    print_Format_permissions(file_props.st_mode,S_ISDIR(file_props.st_mode),S_ISLNK(file_props.st_mode));
+    printf("%5ld ",file_props.st_nlink);
+    printf("%-16.15s ", getpwuid(file_props.st_uid)->pw_name);
+    printf("%-16.15s ", getgrgid(file_props.st_gid)->gr_name);
+    printf("%8ld ",file_props.st_size);
     
     time_t curr_time = time(NULL);
     struct tm* current_time_format = localtime(&curr_time);
@@ -86,11 +89,11 @@ void print_detail(char* name,struct stat file_props){
 int cnt_total(char* path , struct dirent **files,int hidden,int cnt){
     int total = 0;
     for (int i = 0; i < cnt; i++){
-        if (hidden == 1 || files[i]->d_name[0] != '.'){
+        if (hidden == 1 || files[i]->d_name[0] != '.' ){
             struct stat file_props;
             char temp[10000];
             sprintf(temp,"%s/%s",path,files[i]->d_name);
-            stat(temp,&file_props);
+            lstat(temp,&file_props);
             total += file_props.st_blocks;
         }
     }
@@ -128,7 +131,7 @@ int print_ls_helper(char *path_input,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidde
                     struct stat file_props;
                     char temp[10000];
                     sprintf(temp,"%s/%s",path,files[i]->d_name);
-                    stat(temp,&file_props);
+                    lstat(temp,&file_props);
                     if(S_ISDIR(file_props.st_mode) != 0){
                         print_name(files[i]->d_name, 1);
                     }else if (file_props.st_mode & S_IXUSR){
@@ -143,14 +146,14 @@ int print_ls_helper(char *path_input,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidde
             // printf("\n");
         }else{
             struct stat dirstats;
-            stat(path,&dirstats);
+            lstat(path,&dirstats);
             printf("total %d\n",cnt_total(path,files,hidden,cnt)/2);
             for (int i = 0; i < cnt; i++){
                 if (hidden == 1 || files[i]->d_name[0] != '.'){
                     struct stat file_props;
                     char temp[10000];
                     sprintf(temp,"%s/%s",path,files[i]->d_name);
-                    stat(temp,&file_props);
+                    lstat(temp,&file_props);
                     print_detail(files[i]->d_name,file_props);
                 }
             }
@@ -163,13 +166,13 @@ int print_ls_helper(char *path_input,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidde
         }
         // struct dirent *file = readdir(directory);
         char name[100000];
-        int start=strlen(path)-1;
-        while(path[start]!='/'&&start>=0) start--;
-        strcpy(name,&path[start+1]);
+        // int start=strlen(path)-1;
+        // while(path[start]!='/'&&start>=0) start--;
+        strcpy(name,path);
         // printf("Hello\n");
         struct stat file_props;
 
-        stat(path,&file_props);
+        lstat(path,&file_props);
         if (mode == 0){
             if( file_props.st_mode & S_IXUSR ){
                 print_name(name, 2);

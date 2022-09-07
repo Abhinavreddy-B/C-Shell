@@ -1,7 +1,8 @@
-flags = -pedantic -Wall -g
+flags = -pedantic -Wall
 
 main: main.c getinfo.o prompt.o History.o check_invalid.o cd.o print_error.o command_helper.o pinfo.o pwd.o echo.o ls.o process_creation.o my_dll.o node.o discover.o History.o history.o
 	gcc $(flags) main.c *.o -o main 
+	rm *.o
 
 getinfo.o: ./Helpers/getinfo.c
 	gcc $(flags) -c ./Helpers/getinfo.c

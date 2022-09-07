@@ -16,6 +16,9 @@ extern my_dll background_process_list;
 extern int MAXIMUM_BACKGROUND_PROCESS_NAME;
 extern time_t process_start_time;
 extern int is_waiting_for_input;
+extern const size_t MAX_NO_OF_PARTS;
+extern const size_t MAXIMUM_INPUT_SIZE;
+
 
 void add_process_to_list(char* name,pid_t pid){
     ListElement_ptr new_process = (ListElement_ptr) malloc(sizeof(ListElement));
@@ -60,7 +63,16 @@ void upon_child_exit(){
 /**
  * @param mode is 0 => foreground , 1 => background
  */
-int other_commands(char* command_split[],int cnt, int mode){
+int other_commands(char* command_split_input[],int cnt, int mode){
+    char* command_split[MAX_NO_OF_PARTS];
+    for(int i=0;i<cnt;i++){
+        command_split[i] = (char *) malloc(MAXIMUM_INPUT_SIZE * sizeof(char));
+        if(command_split_input[i][0] == '~'){
+            sprintf(command_split[i],"%s%s",home_directory,&command_split_input[i][1]);
+        }else{
+            strcpy(command_split[i],command_split_input[i]);
+        }
+    }
     pid_t pid = fork();
     if(pid == -1){
         print_error("Error creating child process");
