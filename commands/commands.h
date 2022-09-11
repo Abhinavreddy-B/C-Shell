@@ -9,5 +9,9 @@ void present_working_directory();
 int discover_folder(char* command[],int cnt);
 int get_history();
 int pinfo_middleware(char* command[],int cnt);
+void jobs_middleware(char *commands[],int cnt);
+void sig_middleware(char* command[],int cnt);
+void fg_middleware(char* command[],int cnt);
+void bg_middleware(char* command[],int cnt);
 
 #endif

@@ -12,3 +12,7 @@
 #include <time.h>
 #include <errno.h>
 #include <sys/wait.h>
+#include <fcntl.h>
+#include <termios.h>
+#include <stdlib.h>
+#include <ctype.h>

@@ -4,6 +4,7 @@
 #include "Helpers/Helpers.h"
 #include "Linked_list/node.h"
 #include "Linked_list/my_dll.h"
+#include "io_module/input.h"
 
 const size_t MAXIMUM_DIRECTORY_LENGTH = 1001LL;
 const size_t MAXIMUM_INNER_DIRECTORIES = 1001LL;
@@ -22,6 +23,7 @@ char *time_taken;
 char *relative_dir;
 char *absolute_dir;
 char *prev_directory;
+char* input;
 my_dll background_process_list;
 time_t process_start_time;
 char** history;
@@ -50,7 +52,7 @@ int main()
     relative_dir[0] = '~';
     relative_dir[1] = '\0';
     prev_directory[0] = '\0';
-    char input[MAXIMUM_INPUT_SIZE];
+    input = (char *) malloc(MAXIMUM_INPUT_SIZE * sizeof(char));
     char previous_input[MAXIMUM_INPUT_SIZE];
     previous_input[0] = '\0';
     if (get_username(&username, error_holder) || get_systemname(system_name, error_holder) || get_home_dir(&home_directory, MAXIMUM_DIRECTORY_LENGTH, error_holder))
@@ -65,14 +67,23 @@ int main()
         no_of_commands_in_history = load_to_history(history_file,history,input);
         fclose(history_file);
     }
+    signal(SIGCHLD,upon_child_exit);
+    signal(SIGINT,CtrlCHandler);
+    signal(SIGTSTP, CtrlZHandler);
     while (1)
     {
-        prompt(username, system_name, relative_dir, time_taken);
+        // prompt(username, system_name, relative_dir, time_taken);
         strcpy(previous_input,input);
         input[0]='\0';
         is_waiting_for_input = 1;
-        scanf("%[^\n]s", input);
-        getchar();
+        // if(scanf("%[^\n]s", input)==EOF){
+        //     CtrlDHandler();
+        // };
+        // if(getchar() == EOF){
+        //     CtrlDHandler();
+        // };
+        take_input();
+        printf("\n");
         is_waiting_for_input = 0;
         process_start_time = time(NULL);
         if(input[0] != '\0'){

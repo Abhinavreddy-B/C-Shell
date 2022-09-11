@@ -5,20 +5,20 @@
 extern size_t MAXIMUM_DIRECTORY_LENGTH;
 extern char *home_directory;
 
-int cmp(const void* a,const void* b){
+static int cmp(const void* a,const void* b){
     char * n1 = (char *) (*((struct dirent **) a))->d_name;
     char * n2 = (char *) (*((struct dirent **) b))->d_name;
     return strcasecmp(n1,n2);
 }
 
-void sort(struct dirent* arr[],int cnt){
+static void sort(struct dirent* arr[],int cnt){
     qsort(arr,cnt,sizeof(struct dirent*),cmp);
 }
 
 int masks[3][3] = {{S_IRUSR,S_IWUSR,S_IXUSR},{S_IRGRP,S_IWGRP,S_IXGRP},{S_IROTH,S_IWOTH,S_IXOTH}};
 char depiction[3] = {'r','w','x'};
 
-void print_Format_permissions(ino_t perms,int is_directory,int is_link){
+static void print_Format_permissions(ino_t perms,int is_directory,int is_link){
     char str[11];
     str[10]='\0';
     if(is_directory){
@@ -42,7 +42,7 @@ void print_Format_permissions(ino_t perms,int is_directory,int is_link){
 /**
  * @param mode 0 =>normal file , 1 => directory, 2 => executables
 */
-void print_name(char* name,int mode){
+static void print_name(char* name,int mode){
     // normal file
     if(mode == 0){
         printf("%s",name);
@@ -56,7 +56,7 @@ void print_name(char* name,int mode){
     printf("\n");
 }
 
-void print_detail(char* name,struct stat file_props){
+static void print_detail(char* name,struct stat file_props){
     print_Format_permissions(file_props.st_mode,S_ISDIR(file_props.st_mode),S_ISLNK(file_props.st_mode));
     printf("%5ld ",file_props.st_nlink);
     printf("%-16.15s ", getpwuid(file_props.st_uid)->pw_name);
@@ -86,7 +86,7 @@ void print_detail(char* name,struct stat file_props){
     }
 }
 
-int cnt_total(char* path , struct dirent **files,int hidden,int cnt){
+static int cnt_total(char* path , struct dirent **files,int hidden,int cnt){
     int total = 0;
     for (int i = 0; i < cnt; i++){
         if (hidden == 1 || files[i]->d_name[0] != '.' ){
@@ -101,7 +101,7 @@ int cnt_total(char* path , struct dirent **files,int hidden,int cnt){
 }
 // mode = 0 means brief , mode = 1 means detail
 // many is 1 when there are more than 1 paths to be printed, else many is 0
-int print_ls_helper(char *path_input,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidden, int mode,int many )
+static int print_ls_helper(char *path_input,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidden, int mode,int many )
 {
     // printf("Hello\n");
     // printf("%s\n",path_input);

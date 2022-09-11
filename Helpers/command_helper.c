@@ -10,7 +10,7 @@ extern size_t MAXIMUM_INPUT_SIZE;
 /**
  * @param mode if 0 Foreground , 1 if background
 */
-void splitter(char *command, int mode)
+void spaceTokenise(char *command, int mode)
 { 
     char* command_split[MAX_NO_OF_PARTS];
     char* part;
@@ -20,43 +20,7 @@ void splitter(char *command, int mode)
         cnt++;
         part = command_split[cnt] = strtok (NULL, " \t");
     }
-    if(cnt == 0){
-        // if(!is_last){
-            // print_error("Invalid Command, syntax error");
-        // }
-        return;
-    }
-    if(strcmp(command_split[0],"cd") == 0){
-        if(cnt == 1){
-            change_directory("~");
-        }else if(cnt != 2){
-            print_error("Invalid No Of arguments");
-            return;
-        }else{
-            change_directory(command_split[1]);
-        }
-    }else if(strcmp(command_split[0],"pwd") == 0){
-        present_working_directory();
-    }else if(strcmp(command_split[0],"echo")==0){
-        echo(command_split,cnt);
-    }else if(strcmp(command_split[0],"ls") == 0){
-        // printf("Hello\n");
-        ls(command_split,cnt,MAXIMUM_NO_OF_INNER_FILES);
-    }else if(strcmp(command_split[0],"discover") == 0){
-        discover_folder(command_split,cnt);
-    }else if(strcmp(command_split[0],"history") == 0){
-        get_history();
-    }else if(strcmp(command_split[0],"pinfo") == 0){
-        pinfo_middleware(command_split,cnt);
-    }
-    else{
-        // int is_background_task = 0;
-        // if(command_split[cnt-1][strlen(command_split[cnt-1])-1] == '&'){
-            // command_split[cnt-1][strlen(command_split[cnt-1])-1] = '\0';
-            // is_background_task = 1;
-        // }
-        other_commands(command_split,cnt,mode);
-    }
+    redirect(command_split,mode,cnt);
 }
 
 void AndTokeniser(char *command_input){
@@ -77,11 +41,11 @@ void AndTokeniser(char *command_input){
         part = command_split[cnt] = strtok (NULL, "&");
     }
     for(int i=0;i<cnt-1;i++){
-        splitter(command_split[i],1);
+        spaceTokenise(command_split[i],1);
     }
     // command_split[cnt-1][strlen(command_split[cnt-1])-1] = '\0';
     if(strlen(command_split[cnt-1])!=1){
-        splitter(command_split[cnt-1],0);
+        spaceTokenise(command_split[cnt-1],0);
     }
         
 }
@@ -105,6 +69,6 @@ void shell_helper(char *input)
         return;
     }
     for(int i=0;i<tokencnt;i++){
-        AndTokeniser(split_input[i]);
+        piper(split_input[i]);
     }
 }

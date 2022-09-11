@@ -11,5 +11,12 @@ int load_to_history(FILE* input, char* history[20],char* previous_command);
 void add_to_history(char *command, char* history[20],FILE* output,int* no_of_existing_history);
 int check_if_valid_syntax(char * input);
 void upon_child_exit();
+void redirect(char* command[],int mode,int cnt);
+void AndTokeniser(char *command_input);
+void piper(char* command);
+void CtrlDHandler();
+void CtrlCHandler();
+void CtrlZHandler();
+void add_process_to_list(char* name,pid_t pid);
 
 #endif

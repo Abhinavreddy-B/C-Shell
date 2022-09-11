@@ -97,12 +97,22 @@ int other_commands(char* command_split_input[],int cnt, int mode){
             time_t start = process_start_time;
             int wstatus;
             waitpid(pid,&wstatus,WSTOPPED);
+            // printf("Hello\n");
+            if(WIFSTOPPED(wstatus)){
+                add_process_to_list(command_split[0],pid);
+                time_taken[0]='\0';
+                return 1;
+            }
+            delete( &background_process_list , Find(&background_process_list,pid));
             time_t run_time = time(NULL) - start;
             if(run_time >= 1){
                 sprintf(time_taken,"|taken %lds",run_time);
             }else{
                 time_taken[0]='\0';
             }
+            // if(WEXITSTATUS(wstatus) != EXIT_FAILURE){
+                
+            // }
         }else{
             add_process_to_list(command_split[0],pid);
             printf("[%d] %d\n",return_last(&background_process_list),pid);

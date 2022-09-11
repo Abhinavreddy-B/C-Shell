@@ -1,4 +1,6 @@
 # OSN Assignment 1
+# Name: Abhinav Reddy Boddu
+# Roll Number: 2021101034
 # File structure
 ```
 .
@@ -35,6 +37,8 @@
     └── node.h
 
 ```
+<hr>
+
 ## folder structure:
  > `commands:` contains implementations of built-in commands
 
@@ -43,6 +47,22 @@
  > `Linked_list:` contains ADT for linked list (used in storing background process data)
 
  > `io_module:` function for printing errors and prompt
+
+<hr>
+
+## To compile:
+ ```
+ $ make
+ (or)
+ $ make main
+ ```
+
+## To Run:
+ ```
+ $ ./main
+ ```
+
+<hr>
 
 ## assumptions:
  > assumed all lengths such as  `Maximum input size`,`Maximum directory path length`,.... to be 1001
@@ -83,3 +103,9 @@
     * target name must be in enclosed with `"`.
 8. Background commands:
     * running `vi`/`vim` as a background process is creating problems due to some issues with inputs (stdin) on some machines. All other external commands work perfectly.
+9. Foreground processes:
+    * The time taken printed is the sum of individual parts of  command
+     ```
+     sleep 3 ; sleep 4
+     would print the time taken as 7s
+     ```
