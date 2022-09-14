@@ -103,7 +103,6 @@ int other_commands(char* command_split_input[],int cnt, int mode){
                 time_taken[0]='\0';
                 return 1;
             }
-            delete( &background_process_list , Find(&background_process_list,pid));
             time_t run_time = time(NULL) - start;
             if(run_time >= 1){
                 sprintf(time_taken,"|taken %lds",run_time);

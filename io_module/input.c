@@ -4,6 +4,9 @@
 
 extern char *input;
 extern const size_t MAXIMUM_INPUT_SIZE;
+extern char** history;
+extern int no_of_commands_in_history;
+extern char *home_directory;
 
 struct termios orig_termios;
 
@@ -131,6 +134,7 @@ void take_input()
     int pt2 = 0;
     prompt();
     fflush(stdout);
+    int track_history = no_of_commands_in_history;
     while (read(STDIN_FILENO, &c, 1) == 1)
     {
         if (iscntrl(c))
@@ -143,7 +147,39 @@ void take_input()
                 buf[2] = 0;
                 if (read(STDIN_FILENO, buf, 2) == 2)
                 { // length of escape code
-                    printf("\rarrow key: %s", buf);
+                    // printf("\rarrow key: %s", buf);
+                    if (buf[1] == 'A')
+                    {
+                        for (int i = strlen(input); i > 0; i--)
+                        {
+                            printf("\b");
+                        }
+                        if (track_history > 1)
+                        {
+                            track_history--;
+                            strcpy(input, history[track_history - 1]);
+                            pt = strlen(input);
+                            pt2 = 0;
+                            temp_name[0] = '\0';
+                            temp_parent[0] = '\0';
+                        }
+                    }
+                    else if (buf[1] == 'B')
+                    {
+                        for (int i = 0; i < pt; i++)
+                        {
+                            printf("\b");
+                        }
+                        if (track_history < no_of_commands_in_history)
+                        {
+                            track_history++;
+                            strcpy(input, history[track_history - 1]);
+                            pt = strlen(input);
+                            pt2 = 0;
+                            temp_name[0] = '\0';
+                            temp_parent[0] = '\0';
+                        }
+                    }
                 }
             }
             else if (c == 127)
@@ -196,7 +232,11 @@ void take_input()
                 strcat(temp_parent,temp_name);
                 temp_name[0] = '\0'; 
                 pt2 = 0;
-            }else{
+            }else if(c == '~'){
+                strcat(temp_parent,home_directory);
+                pt2 = strlen(temp_parent);
+            }
+            else{
                 temp_name[pt2] = c;
                 pt2++;
                 temp_name[pt2] = '\0';

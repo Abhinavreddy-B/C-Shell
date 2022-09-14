@@ -86,6 +86,7 @@ int main()
         printf("\n");
         is_waiting_for_input = 0;
         process_start_time = time(NULL);
+        time_taken[0] = '\0';
         if(input[0] != '\0'){
             if(strcmp(input,previous_input) != 0){
                 history_file = fopen(history_file_path,"w");
