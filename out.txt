@@ -1,5 +1,0 @@
-const size_t MAX_NO_OF_PARTS = 1001LL;
-const size_t MAXIMUM_NO_OF_INNER_FILES = 1001LL;
-char *username;
-char *home_directory = NULL;
-char *system_name;

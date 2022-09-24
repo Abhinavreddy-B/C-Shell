@@ -19,51 +19,6 @@ extern int is_waiting_for_input;
 extern const size_t MAX_NO_OF_PARTS;
 extern const size_t MAXIMUM_INPUT_SIZE;
 
-
-void add_process_to_list(char* name[],pid_t pid,int cnt){
-    ListElement_ptr new_process = (ListElement_ptr) malloc(sizeof(ListElement));
-    new_process->name = (char *) malloc(MAXIMUM_BACKGROUND_PROCESS_NAME * sizeof(char));
-    new_process->name[0] = '\0';
-    for(int i=0;i<cnt;i++){
-        strcat(new_process->name,name[i]);
-        strcat(new_process->name," ");
-    }
-    new_process->pid = pid;
-    new_process->index = return_last(&background_process_list) + 1;
-    insert(&background_process_list , new_process);
-}
-
-void upon_child_exit(){
-    int status;
-    pid_t child_pid = waitpid(-1,&status,WNOHANG);
-    if(child_pid == 0 || child_pid == -1){
-        // nothing for now
-    }else{
-        printf("\n");
-        ListElement_ptr found = Find_and_return(&background_process_list,child_pid);
-        if(found == NULL){
-            printf("Some problem\nabnormal interrupt\n");
-            return;
-        }else{
-            printf("%s with pid = %d exited ", found->name ,found->pid);
-            delete( &background_process_list , Find(&background_process_list,child_pid));
-        }
-        if(WIFEXITED(status)){
-            printf("normally");
-        }else if(WIFSIGNALED(status)){
-            printf("Exited Abnomally");
-            fflush(stdin);
-            psignal(WTERMSIG(status),"Cause");
-        }
-        printf("\n");
-        if(is_waiting_for_input){
-            prompt(username, system_name, relative_dir, time_taken);
-        }
-        fflush(stdout);
-    }
-    return;
-}
-
 /**
  * @param mode is 0 => foreground , 1 => background
  */

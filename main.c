@@ -106,4 +106,5 @@ int main()
             time_taken[0]='\0';
         }
     }
+    printf("Exit succesfull...\n");
 }

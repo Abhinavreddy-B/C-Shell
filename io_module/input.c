@@ -265,28 +265,6 @@ void take_input()
         {
             input[pt++] = c;
             input[pt] = '\0';
-            // printf("%c", c);
-            // if(c == ' '){
-            //     // temp_parent[0] = '.';
-            //     // temp_parent[0] = '\0';
-            //     // pt2 = 1;
-            //     // temp_name[0] = '\0';
-            //     // pt2 = 0;
-            // }
-            // else if(c == '/'){
-            //     // strcat(temp_parent,"/");
-            //     // strcat(temp_parent,temp_name);
-            //     // temp_name[0] = '\0'; 
-            //     // pt2 = 0;
-            // }else if(c == '~'){
-            //     // strcat(temp_parent,home_directory);
-            //     // pt2 = strlen(temp_parent);
-            // }
-            // else{
-            //     // temp_name[pt2] = c;
-            //     // pt2++;
-            //     // temp_name[pt2] = '\0';
-            // }
         }
         pt = strlen(input);
         prompt();
