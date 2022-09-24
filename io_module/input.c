@@ -60,11 +60,54 @@ void update(char * matched_files[],int cnt,char name[],int len_name){
     }
 }
 
-void handletab(char parent[],char name[],int len_name){
-    if(parent[0] == '\0'){
-        parent[0] = '.';
-        parent[1] = '\0';
+void handletab(char parent[],char name[],int len_name,char *input){
+    // char* input;
+    parent[0]='\0';
+    name[0]='\0';
+    int pt = strlen(input);
+    int temp = pt;
+    while (temp >= 0 && input[temp] != '/' && input[temp] != ' ')
+    {
+        temp--;
     }
+    if (temp == -1 || input[temp] == ' ')
+    {
+        strcpy(parent, ".");
+        strcpy(name, &input[temp + 1]);
+    }
+    else
+    {
+        int temp2 = temp;
+        while (temp2 >= 0 && input[temp2] != ' ')
+        {
+            temp2--;
+        }
+        if(input[temp2+1] == '~'){
+            sprintf(parent,"%s/",home_directory);
+            strncat(parent,&input[temp2+2],temp-1-temp2-2+1);
+            strcpy(name,&input[temp+1]);
+        }else if(input[temp2+1] == '/'){
+            /* '/' cases */
+            // strcpy(parent,"/");
+            // sprintf(parent,"/");
+            if(temp-1 == temp2){
+                sprintf(parent,"/");
+            }else{
+                strncat(parent,&input[temp2+1],temp-1-temp2-1+1);
+            }
+            strcpy(name,&input[temp+1]);
+        }
+        else{
+            strncat(parent,&input[temp2+1],temp-1-temp2-1+1);
+            strcpy(name,&input[temp+1]);
+        }
+    }
+    // printf("%s - %s\n",parent,name);
+    len_name = strlen(name);
+    // if(parent[0] == '\0'){
+    //     parent[0] = '.';
+    //     parent[1] = '\0';
+    // }
     // printf("\'%s\' - \'%s\'",parent,name);
     DIR* d;
     if((d = opendir(parent)) != NULL){
@@ -73,13 +116,15 @@ void handletab(char parent[],char name[],int len_name){
         int cnt = scandir(parent,&files,NULL,alphasort);
         int matched = 0;
         for(int i=0;i<cnt;i++){
-            matched += (len_name == 0 || strncmp(files[i]->d_name,name,len_name) == 0);
+            matched += ((strcmp(files[i]->d_name,".") != 0 && strcmp(files[i]->d_name,"..") != 0) && (len_name == 0 || strncmp(files[i]->d_name,name,len_name) == 0));
         }
         if(matched == 0){
+            printf("\a");
+            fflush(stdout);
             printf("\n\033[31;1mNo Matching Files\n\033[0m");
         }else if(matched == 1){
             for(int i=0;i<cnt;i++){
-                if(len_name == 0 || strncmp(files[i]->d_name,name,len_name) == 0){
+                if((strcmp(files[i]->d_name,".") != 0 && strcmp(files[i]->d_name,"..") != 0) && (len_name == 0 || strncmp(files[i]->d_name,name,len_name) == 0)){
                     strcat(parent,"/");
                     strcat(parent,files[i]->d_name);
                     strcat(input,&files[i]->d_name[len_name]);
@@ -101,7 +146,7 @@ void handletab(char parent[],char name[],int len_name){
             int pt=0;
             printf("\n");
             for(int i=0;i<cnt;i++){
-                if(len_name == 0 || strncmp(files[i]->d_name,name,len_name) == 0){
+                if((strcmp(files[i]->d_name,".") != 0 && strcmp(files[i]->d_name,"..") != 0) && (len_name == 0 || strncmp(files[i]->d_name,name,len_name) == 0)){
                     char temp[MAXIMUM_INPUT_SIZE];
                     sprintf(temp,"%s/%s",parent,files[i]->d_name);
                     struct stat props;
@@ -131,7 +176,8 @@ void take_input()
     char temp_parent[MAXIMUM_INPUT_SIZE];
     // temp_parent[0] = '.';
     temp_parent[0] = '\0';
-    int pt2 = 0;
+    input[0] = '\0';
+    // int pt2 = 0;
     prompt();
     fflush(stdout);
     int track_history = no_of_commands_in_history;
@@ -152,14 +198,14 @@ void take_input()
                     {
                         for (int i = strlen(input); i > 0; i--)
                         {
-                            printf("\b");
+                            printf("\b \b");
                         }
-                        if (track_history > 1)
+                        if (track_history > 0)
                         {
                             track_history--;
-                            strcpy(input, history[track_history - 1]);
+                            strcpy(input, history[track_history]);
                             pt = strlen(input);
-                            pt2 = 0;
+                            // pt2 = 0;
                             temp_name[0] = '\0';
                             temp_parent[0] = '\0';
                         }
@@ -168,14 +214,14 @@ void take_input()
                     {
                         for (int i = 0; i < pt; i++)
                         {
-                            printf("\b");
+                            printf("\b \b");
                         }
-                        if (track_history < no_of_commands_in_history)
+                        if (track_history < no_of_commands_in_history-1)
                         {
                             track_history++;
-                            strcpy(input, history[track_history - 1]);
+                            strcpy(input, history[track_history]);
                             pt = strlen(input);
-                            pt2 = 0;
+                            // pt2 = 0;
                             temp_name[0] = '\0';
                             temp_parent[0] = '\0';
                         }
@@ -202,8 +248,8 @@ void take_input()
             }
             else if (c == 9)
             { // TAB character
-                handletab(temp_parent,temp_name,strlen(temp_name));
-                pt2 = strlen(temp_name);
+                handletab(temp_parent,temp_name,strlen(temp_name),input);
+                // pt2 = strlen(temp_name);
                 pt = strlen(input);
             }
             else if (c == 4)
@@ -219,29 +265,30 @@ void take_input()
         {
             input[pt++] = c;
             input[pt] = '\0';
-            printf("%c", c);
-            if(c == ' '){
-                // temp_parent[0] = '.';
-                temp_parent[0] = '\0';
-                // pt2 = 1;
-                temp_name[0] = '\0';
-                pt2 = 0;
-            }
-            else if(c == '/'){
-                strcat(temp_parent,"/");
-                strcat(temp_parent,temp_name);
-                temp_name[0] = '\0'; 
-                pt2 = 0;
-            }else if(c == '~'){
-                strcat(temp_parent,home_directory);
-                pt2 = strlen(temp_parent);
-            }
-            else{
-                temp_name[pt2] = c;
-                pt2++;
-                temp_name[pt2] = '\0';
-            }
+            // printf("%c", c);
+            // if(c == ' '){
+            //     // temp_parent[0] = '.';
+            //     // temp_parent[0] = '\0';
+            //     // pt2 = 1;
+            //     // temp_name[0] = '\0';
+            //     // pt2 = 0;
+            // }
+            // else if(c == '/'){
+            //     // strcat(temp_parent,"/");
+            //     // strcat(temp_parent,temp_name);
+            //     // temp_name[0] = '\0'; 
+            //     // pt2 = 0;
+            // }else if(c == '~'){
+            //     // strcat(temp_parent,home_directory);
+            //     // pt2 = strlen(temp_parent);
+            // }
+            // else{
+            //     // temp_name[pt2] = c;
+            //     // pt2++;
+            //     // temp_name[pt2] = '\0';
+            // }
         }
+        pt = strlen(input);
         prompt();
         fflush(stdout);
     }

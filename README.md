@@ -1,4 +1,3 @@
-# OSN Assignment 1
 # Name: Abhinav Reddy Boddu
 # Roll Number: 2021101034
 # File structure
@@ -64,6 +63,11 @@
 
 <hr>
 
+# Assignment 3
+* spec 1-3 completed
+* other specs might have bugs.
+
+# OSN Assignment 2
 ## assumptions:
  > assumed all lengths such as  `Maximum input size`,`Maximum directory path length`,.... to be 1001
 

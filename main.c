@@ -99,5 +99,11 @@ int main()
                 shell_helper(input);
             }
         }
+        time_t run_time = time(NULL) - process_start_time;
+        if(run_time >= 1){
+            sprintf(time_taken,"|taken %lds",run_time);
+        }else{
+            time_taken[0]='\0';
+        }
     }
 }

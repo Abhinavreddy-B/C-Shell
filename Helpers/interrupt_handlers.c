@@ -18,6 +18,7 @@ void CtrlDHandler(){
 void CtrlCHandler(){
     if(is_waiting_for_input){
         printf("\n");
+        // input[0] = '\0';
         prompt(username, system_name, relative_dir, time_taken);
         fflush(stdout);
     }else{
@@ -27,6 +28,7 @@ void CtrlCHandler(){
 }
 
 void CtrlZHandler(){
+    printf("Hello\n");
     if(is_waiting_for_input){
         printf("\n");
         prompt(username, system_name, relative_dir, time_taken);

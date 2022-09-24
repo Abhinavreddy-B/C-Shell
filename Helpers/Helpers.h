@@ -17,6 +17,6 @@ void piper(char* command);
 void CtrlDHandler();
 void CtrlCHandler();
 void CtrlZHandler();
-void add_process_to_list(char* name,pid_t pid);
+// void add_process_to_list(char* name[],pid_t pid,int cnt);
 
 #endif

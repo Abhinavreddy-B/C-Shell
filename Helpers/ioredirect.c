@@ -6,13 +6,13 @@
 
 extern size_t MAX_NO_OF_PARTS;
 extern size_t MAXIMUM_NO_OF_INNER_FILES;
-
+extern int is_waiting_for_input;
 
 /**
  * @param mode if 0 Foreground , 1 if background
 */
 void splitter(char *command_split[],int mode,int cnt){
-    if(cnt == 0){
+    if(cnt == 0 || is_waiting_for_input){
         // if(!is_last){
             // print_error("Invalid Command, syntax error");
         // }
@@ -94,7 +94,38 @@ void redirect(char* command[],int mode,int cnt){
                 return;
             }
             i++;
-        }else{
+        }else if(strlen(command[i]) >=2 && command[i][0] == '<'){
+            infiledescr = open(&command[i][1],O_RDONLY);
+            if(infiledescr == -1){
+                char error[1000];
+                sprintf(error,"%s: No such file or directory",&command[i][1]);
+                print_error(error);
+                dup2(stdoutcpy,STDOUT_FILENO);
+                dup2(stdincpy,STDIN_FILENO);
+                return;
+            }
+        }else if(strlen(command[i]) >=2 && command[i][0] == '>' && command[i][1] != '>'){
+            outfiledescr = open(&command[i][1],O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            if(outfiledescr == -1){
+                char error[1000];
+                sprintf(error,"%s: No such file or directory",&command[i][1]);
+                print_error(error);
+                dup2(stdoutcpy,STDOUT_FILENO);
+                dup2(stdincpy,STDIN_FILENO);
+                return;
+            }
+        }else if(strlen(command[i]) >=3 &&  command[i][0] == '>' && command[i][1] == '>'){
+            outfiledescr = open(&command[i][2],O_WRONLY | O_APPEND | O_CREAT, 0644);
+            if(outfiledescr == -1){
+                char error[1000];
+                sprintf(error,"%s: No such file or directory",&command[i][2]);
+                print_error(error);
+                dup2(stdoutcpy,STDOUT_FILENO);
+                dup2(stdincpy,STDIN_FILENO);
+                return;
+            }
+        }
+        else{
             command_split[command_split_cnt] = command[i];
             command_split_cnt++;
         }
