@@ -10,10 +10,6 @@ my_dll CreateList(void) //creating an empty list
     return temp;
 }
 
-
-
-
-
 int IsEmpty(const my_dll _L)    //to check if empty
 {
     if (_L.tail == NULL)
@@ -22,10 +18,6 @@ int IsEmpty(const my_dll _L)    //to check if empty
     }
     return 0;
 }
-
-
-
-
 
 void insert(my_dll* _L, ListElement_ptr _x) 
 {
@@ -42,10 +34,6 @@ void insert(my_dll* _L, ListElement_ptr _x)
     }
     // printf("insert %s\n",_L->tail->data->name);
 }
-
-
-
-
 
 void insert_at(my_dll* _L,ListElement_ptr _x,int _i)
 {
@@ -90,10 +78,6 @@ void insert_at(my_dll* _L,ListElement_ptr _x,int _i)
         printf("i is not under limits\n");
     }
 }
-
-
-
-
 
 void delete(my_dll* _L,int _i)
 {
@@ -144,9 +128,6 @@ void delete(my_dll* _L,int _i)
     }
 }
 
-
-
-
 int Find(const my_dll* _L,pid_t _pid)
 {
     int pos = 0;
@@ -161,7 +142,6 @@ int Find(const my_dll* _L,pid_t _pid)
     }
     return -1;
 }
-
 
 ListElement_ptr Find_and_return(const my_dll* _L,pid_t _pid)
 {
@@ -179,9 +159,6 @@ ListElement_ptr Find_and_return(const my_dll* _L,pid_t _pid)
     }
     return NULL;
 }
-
-
-
 
 void prune(my_dll* _L){
     //print(*_L);
@@ -203,38 +180,6 @@ int return_last(my_dll * _L){
     }
     return _L->tail->data->index;
 }
-
-
-
-
-// void print(const my_dll _L){
-//     //printf("entered print function with %p\n",(void *) _L.root);
-//     nodeptr curr_pos=_L.root;
-//     while(curr_pos){
-//         printf("%d ",curr_pos->data);
-//         curr_pos=curr_pos->next;
-//     }
-//     printf("\n");
-// }
-
-
-
-
-
-
-// void print_reverse(const my_dll _L){
-//     nodeptr curr_pos=_L.tail;
-//     while(curr_pos){
-//         printf("%d ",curr_pos->data);
-//         curr_pos=curr_pos->prev;
-//     }
-//     printf("\n");
-// }
-
-
-
-
-
 
 unsigned int get_size(const my_dll _L){
     int pos=0;

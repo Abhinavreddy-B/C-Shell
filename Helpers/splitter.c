@@ -13,9 +13,6 @@ extern int is_waiting_for_input;
 */
 void splitter(char *command_split[],int mode,int cnt){
     if(cnt == 0 || is_waiting_for_input){
-        // if(!is_last){
-            // print_error("Invalid Command, syntax error");
-        // }
         return;
     }
     if(strcmp(command_split[0],"cd") == 0){

@@ -88,10 +88,6 @@ int discover_folder(char* command[],int cnt){
         print_error("Invalid Number Of Arguments for the command \"discover\"");
         return -1;
     }
-    // if(target != NULL && flags_exist == 1){
-        // print_error("Invalid use-case of \"discover\", cannot have both flags and target at the same time");
-        // return -1;
-    // }
     if(path[strlen(path)-1] == '/' && strlen(path) != 1){
         path[strlen(path) - 1] = '\0';
     }

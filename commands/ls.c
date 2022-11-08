@@ -103,9 +103,6 @@ static int cnt_total(char* path , struct dirent **files,int hidden,int cnt){
 // many is 1 when there are more than 1 paths to be printed, else many is 0
 static int print_ls_helper(char *path_input,size_t MAXIMUM_NO_OF_INNER_PARTS, int hidden, int mode,int many )
 {
-    // printf("Hello\n");
-    // printf("%s\n",path_input);
-    // DIR *directory;
     char path[MAXIMUM_DIRECTORY_LENGTH] ;
     if(path_input[0] == '~'){
         sprintf(path , "%s%s", home_directory, &path_input[1]);
@@ -121,9 +118,6 @@ static int print_ls_helper(char *path_input,size_t MAXIMUM_NO_OF_INNER_PARTS, in
         if(many){
             printf("\n\033[41:32m%s:\033[0m\n",path);
         }
-        // while ((files[cnt] = prop = readdir(directory)) != NULL){
-            // cnt++;
-        // }
         sort(files, cnt);
         if (mode == 0){
             for (int i = 0; i < cnt; i++){

@@ -63,9 +63,6 @@ int other_commands(char* command_split_input[],int cnt, int mode){
                 time_taken[0]='\0';
                 return 1;
             }
-            // if(WEXITSTATUS(wstatus) != EXIT_FAILURE){
-                
-            // }
         }else{
             add_process_to_list(command_split,pid,cnt);
             printf("[%d] %d\n",return_last(&background_process_list),pid);

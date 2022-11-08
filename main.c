@@ -76,12 +76,6 @@ int main()
         strcpy(previous_input,input);
         input[0]='\0';
         is_waiting_for_input = 1;
-        // if(scanf("%[^\n]s", input)==EOF){
-        //     CtrlDHandler();
-        // };
-        // if(getchar() == EOF){
-        //     CtrlDHandler();
-        // };
         take_input();
         printf("\n");
         is_waiting_for_input = 0;

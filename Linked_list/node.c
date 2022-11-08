@@ -8,6 +8,5 @@ nodeptr MakeNode(ListElement_ptr _x){
     temp->prev=NULL;
     temp->next=NULL;
     temp->data=_x;
-    // printf("Maknode %s\n",_x->name);
     return temp;
 }

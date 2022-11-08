@@ -3,12 +3,6 @@
 #include "../io_module/print_error.h"
 
 extern char *home_directory;
-// cat /proc/0/status
-// void read_garbage(char garbage[],FILE* input,int cnt){
-//     for(int i=0;i<cnt;i++){
-//         getline(garbage,1000,input);
-//     }
-// }
 
 int pinfo(pid_t pid){
     char pinfo_filepath[30];

@@ -2,8 +2,8 @@ flags = -pedantic -Wall -g
 
 main: main.c input.o getinfo.o splitter.o add_to_list.o interrupt_handlers.o pipe.o fg.o bg.o sig.o prompt.o History.o jobs.o check_invalid.o cd.o print_error.o tokenize.o pinfo.o pwd.o echo.o ls.o process_creation.o my_dll.o node.o discover.o History.o history.o ioredirect.o
 	gcc $(flags) main.c *.o -o main
-	make clean
-
+	rm *.o
+	
 add_to_list.o: ./Helpers/add_to_list.c
 	gcc $(flags) -c ./Helpers/add_to_list.c
 

@@ -104,11 +104,6 @@ void handletab(char parent[],char name[],int len_name,char *input){
     }
     // printf("%s - %s\n",parent,name);
     len_name = strlen(name);
-    // if(parent[0] == '\0'){
-    //     parent[0] = '.';
-    //     parent[1] = '\0';
-    // }
-    // printf("\'%s\' - \'%s\'",parent,name);
     DIR* d;
     if((d = opendir(parent)) != NULL){
         // printf("Hello\n");
@@ -242,9 +237,6 @@ void take_input()
                     input[--pt] = '\0';
                     printf("\b \b");
                 }
-                // printf("%c",8); // backspace character
-                // input[strlen(input) - 1] = '\0';
-                // input[strlen(input)+1] = ' ';
             }
             else if (c == 9)
             { // TAB character

@@ -39,7 +39,7 @@ void upon_child_exit(){
         }else if(WIFSIGNALED(status)){
             printf("Exited Abnomally");
             fflush(stdout);
-            psignal(WTERMSIG(status),"Cause");
+            // psignal(WTERMSIG(status),"Cause");
         }
         printf("\n");
         if(is_waiting_for_input){
@@ -75,6 +75,7 @@ void CtrlZHandler(){
         fflush(stdout);
     }else{
         is_waiting_for_input = 1;
+        setpgid(0,0);
         printf("\n");
     }
     return;

@@ -2,38 +2,46 @@
 # Roll Number: 2021101034
 # File structure
 ```
-.
-├── main.c
-├── makefile
-├── README.md
-├── headers.h
+2021101034
 ├── commands
-│   ├── cd.c
 │   ├── commands.h
+│   ├── bg.c
+│   ├── cd.c
 │   ├── discover.c
 │   ├── echo.c
+│   ├── fg.c
 │   ├── history.c
+│   ├── jobs.c
 │   ├── ls.c
 │   ├── pinfo.c
-│   └── pwd.c
+│   ├── pwd.c
+│   └── sig.c
 ├── Helpers
-│   ├── check_invalid.c
-│   ├── command_helper.c
-│   ├── getinfo.c
 │   ├── Helpers.h
-│   ├── History.c
-│   └── process_creation.c
+│   ├── add_to_list.c
+│   ├── check_invalid.c
+│   ├── getinfo.c
+│   ├── History.c               /* TO HANDLE HISTORY */
+│   ├── interrupt_handlers.c
+│   ├── ioredirect.c
+│   ├── pipe.c
+│   ├── process_creation.c
+│   ├── splitter.c              /* split the command among cd,ls,echo,..... */
+│   └── tokenize.c
 ├── io_module
+│   ├── input.c                 /* Taking input ( raw mode ) and autocompletion */
+│   ├── input.h
 │   ├── print_error.c
 │   ├── print_error.h
 │   ├── prompt.c
 │   └── prompt.h
-└── Linked_list
-    ├── Makefile
-    ├── my_dll.c
-    ├── my_dll.h
-    ├── node.c
-    └── node.h
+├── Linked_list
+│   └── ADT for Linked List
+├── main.c
+├── makefile
+├── headers.h
+├── README.md
+└── README.pdf
 
 ```
 <hr>
@@ -45,7 +53,7 @@
 
  > `Linked_list:` contains ADT for linked list (used in storing background process data)
 
- > `io_module:` function for printing errors and prompt
+ > `io_module:` function for taking input, printing errors and prompt
 
 <hr>
 
@@ -64,10 +72,22 @@
 <hr>
 
 # Assignment 3
-* spec 1-3 completed
-* other specs might have bugs.
+ > assuming precendence order is `';'`>`'&'`>`'|'` > (spaces and tabs) > (io redirection) . So tokenising accordingly.
 
-# OSN Assignment 2
+1. Spec1:
+    * Assuming that `<` , `>` , `>>` would always be followed by a file name ( i.e commands like "`cat < >`" or "`cat <`" will give ambiguous results)
+2. Spec2:
+    * the commands when using pipe run one command after the other 
+        ```
+        ~> sleep 5 | sleep 5
+        ```
+        takes 10 seconds to execute.
+3. Spec4:
+    * `bg` is having problems with "vi" / "vim" due to some unknown vi bugs.
+4. Spec6:
+    * Everything is implemented as mentioned in the PDF
+    
+# Assignment 2
 ## assumptions:
  > assumed all lengths such as  `Maximum input size`,`Maximum directory path length`,.... to be 1001
 

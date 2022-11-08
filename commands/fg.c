@@ -6,14 +6,16 @@
 extern my_dll background_process_list;
 
 void fg(pid_t pid){
-    setpgid(pid,getpgrp());
+    // printf("%d - %d\n",pid,getpgrp());
+    // setpgid(pid,getpgid(0));
     signal(SIGTTIN,SIG_IGN);
     signal(SIGTTOU,SIG_IGN);
 
+    int temp = getpgrp();
     tcsetpgrp(STDIN_FILENO,pid);
     kill(pid,SIGCONT);
     waitpid(pid,NULL,WSTOPPED | WUNTRACED);
-    tcsetpgrp(STDIN_FILENO,getpgrp());
+    tcsetpgrp(STDIN_FILENO,temp);
 
     signal(SIGTTIN,SIG_DFL);
     signal(SIGTTOU,SIG_DFL);
