@@ -1,5 +1,34 @@
-# Name: Abhinav Reddy Boddu
-# Roll Number: 2021101034
+# What is This?
+* This is a Shell written in C for Linux operating system.
+
+# Why write a new one when you have Bash?
+* lol this is part of an assignment at college
+
+# How to Install?
+* I wouldn't recommend anyone installing it. 😂
+* Go use bash instead of this.
+
+# If you really Want to use this as a reference for your shell assignment:
+* My `Ctrl+Z`,`Ctrl+C` are Not working properly.
+* Go to the folder you wish, And Run:
+    ```sh
+    $ git clone https://github.com/Abhinavreddy-B/C-Shell.git
+    ```
+* Compile as:
+    ```sh
+    $ make
+    (or)
+    $ make main
+    ```
+* Run As:
+    ```sh
+    $ ./main
+    ```
+* How To Exit?
+    * I am not a VIM user, I provide a way to exit my Shell.
+    * just press `Ctrl+D`
+
+
 # File structure
 ```
 2021101034
@@ -116,15 +145,6 @@
     * even if input is an invalid command it is being added to history.
     * refraing from adding to history only when the new input is exact same as old one (including space / tabs ).
     * saving history in a hidden file `.shell_history.tmp`. any arbitrary changes made to this file while programme execution would not reflect and leads to unexpected errors.
-7. discover:
-    * assuming it can only be of the form:
-        ```
-        discover <directory to search for> <flags> <target name>
-        ```
-    * if no flags are given then considering it as `-d -f` only.
-    * assuming that there cant be multiple directories in the arguments to search for 
-    (searched in only first appearing directory in the arguments).
-    * target name must be in enclosed with `"`.
 8. Background commands:
     * running `vi`/`vim` as a background process is creating problems due to some issues with inputs (stdin) on some machines. All other external commands work perfectly.
 9. Foreground processes:
